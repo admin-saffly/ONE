@@ -192,6 +192,78 @@
   .dlg h3 { margin: 0 0 10px; font-family: var(--cond); font-size: 24px; }
   .dlg .two { display: flex; gap: 8px; margin-top: 14px; } .dlg .two > * { flex: 1; }
 
+
+  /* ================= TRANSPORT / TRIPS ================= */
+  .rule { background: #F3E8FF; color: #5B21B6; border-radius: 11px; padding: 10px 12px; font-size: 14px; margin: 0 0 14px; }
+  .toggle { display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+  .toggle input { width: 22px; height: 22px; accent-color: var(--blue); }
+  .trip { border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+  .trip .when { font-family: var(--cond); font-size: 22px; font-weight: 700; }
+  .trip .route2 { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-weight: 600; }
+  .trip .route2 i { flex: 1; border-top: 2px dashed var(--line); }
+  .trip small { color: var(--slate); display: block; }
+  .trip a { color: var(--blue); font-weight: 700; }
+  .tile.trans .ico { background: #F3E8FF; } .tile.admin { background: var(--night); color: #fff; }
+  .tile.admin .ico { background: rgba(255,255,255,.12); } .tile.admin .ar, .tile.admin small { color: #C9D6EE; }
+
+  /* ================= ADMIN CONSOLE ================= */
+  body.wide #app { max-width: 1180px; }
+  .crumb { color: var(--slate); font-size: 13px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .kpi { background: #fff; border: 0; border-radius: 16px; padding: 14px; text-align: left; cursor: pointer; position: relative; overflow: hidden; }
+  .kpi::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c, var(--blue)); }
+  .kpi .n { font-family: var(--cond); font-size: 38px; font-weight: 700; line-height: 1; display: block; margin: 4px 0 2px; }
+  .kpi .t { font-weight: 600; font-size: 14px; } .kpi .s { font-size: 12.5px; color: var(--slate); }
+  .kpi.alert .n { color: var(--bad); }
+  .kpi:hover { box-shadow: 0 0 0 2px var(--c, var(--blue)); }
+  .segs { display: flex; gap: 6px; overflow-x: auto; background: #fff; padding: 5px; border-radius: 14px; margin-bottom: 14px; scrollbar-width: none; }
+  .segs::-webkit-scrollbar { display: none; }
+  .segs button { flex: 1 0 auto; border: 0; background: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; color: var(--slate); white-space: nowrap; }
+  .segs button.on { background: var(--night); color: #fff; }
+  .segs .dot { display: inline-block; min-width: 20px; padding: 1px 6px; border-radius: 999px; background: var(--bad); color: #fff; font-size: 12px; margin-left: 6px; }
+  .pane[hidden] { display: none; }
+  .filters { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .card { background: #fff; border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1.5px solid transparent; }
+  .card.urgent { border-color: #F3B4B4; background: #FFF8F8; }
+  .card .top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+  .card .ttl { font-weight: 700; font-size: 16px; } .card .meta { color: var(--slate); font-size: 13px; margin-top: 2px; }
+  .card .desc { margin: 8px 0; font-size: 14.5px; }
+  .card .links { display: flex; gap: 12px; flex-wrap: wrap; font-size: 14px; margin: 6px 0 10px; }
+  .card .links a { color: var(--blue); font-weight: 600; text-decoration: none; }
+  .ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ctrl select, .ctrl input { padding: 9px 10px; font-size: 14.5px; }
+  .ctrl .full { grid-column: 1 / -1; }
+  .pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--sky); color: var(--blue-d); white-space: nowrap; }
+  .pill.red { background: var(--bad-bg); color: var(--bad); } .pill.green { background: var(--ok-bg); color: var(--ok); }
+  .pill.amber { background: var(--warn-bg); color: var(--warn); } .pill.grey { background: #E9EDF3; color: var(--slate); }
+  .bars { display: grid; gap: 8px; }
+  .card .desc, .card .ttl, .names div, .people span, .trip .route2 span, .ln span { unicode-bidi: plaintext; }
+  .barrow { display: grid; grid-template-columns: 210px 1fr 46px; gap: 10px; align-items: center; font-size: 14px; cursor: default; }
+  .barrow.click { cursor: pointer; } .barrow.click:hover .lbl { color: var(--blue); }
+  .barrow .track { height: 14px; background: #EEF2F8; border-radius: 999px; overflow: hidden; }
+  .barrow .fill { height: 100%; border-radius: 999px; background: var(--c, var(--blue)); transform-origin: left; animation: grow .6s ease-out both; }
+  @keyframes grow { from { transform: scaleX(0); } }
+  @media (prefers-reduced-motion: reduce) { .barrow .fill { animation: none; } }
+  .barrow b { text-align: right; font-family: var(--cond); font-size: 18px; }
+  .people { margin: 4px 0 6px 220px; font-size: 13.5px; color: var(--slate); }
+  .people div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); padding: 4px 0; }
+  .daychips { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 12px; scrollbar-width: none; }
+  .daychips button { flex: none; border: 1.5px solid var(--line); background: #fff; border-radius: 12px; padding: 8px 12px; cursor: pointer; text-align: center; line-height: 1.2; }
+  .daychips button b { display: block; font-family: var(--cond); font-size: 18px; }
+  .daychips button.on { border-color: var(--night); background: var(--night); color: #fff; }
+  .bignum { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 12px; }
+  .bignum b { font-family: var(--cond); font-size: 56px; line-height: 1; }
+  .names { columns: 2; column-gap: 20px; font-size: 14px; } .names div { break-inside: avoid; padding: 2px 0; }
+  details.grp { border-top: 1px solid var(--line); padding: 10px 0; } details.grp summary { cursor: pointer; font-weight: 700; }
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px;
+           border-radius: 12px; font-weight: 600; z-index: 20; box-shadow: 0 10px 30px rgba(0,0,0,.25); max-width: 90vw; }
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; } .btnrow .btn { width: auto; padding: 10px 14px; font-size: 15px; }
+  .btn.small { padding: 8px 12px; font-size: 14px; width: auto; } .btn.red { background: var(--bad); } .btn.green { background: var(--ok); }
+  .updated { color: var(--slate); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .updated button { border: 0; background: #fff; border-radius: 999px; padding: 6px 12px; cursor: pointer; font-weight: 700; color: var(--blue); }
+  @media (max-width: 720px) { .twocol { grid-template-columns: 1fr; } .names { columns: 1; } .barrow { grid-template-columns: 120px 1fr 40px; font-size: 13px; } .people { margin-left: 0; } }
+
   @media (max-width: 520px) {
     .opts { grid-template-columns: 1fr 1fr; } .opt.big { grid-column: span 2; }
     .grid { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -356,6 +428,43 @@
     </form>
   </section>
 
+
+  <!-- TRANSPORT -->
+  <section class="view" id="v-transport" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>Transport request</h2><span class="ar">طلب انتقال للعمل</span></div></div>
+    <div class="msg"></div>
+    <form class="panel" id="transForm">
+      <p class="rule" id="tRule">Work trips only. Request at least 48 hours before the trip. <span class="ar">لأغراض العمل فقط، وقبل الرحلة بـ 48 ساعة على الأقل</span></p>
+      <div class="field"><label class="f" for="tWhen">Trip date &amp; time <span class="ar">موعد الرحلة</span></label><input id="tWhen" type="datetime-local" required></div>
+      <div class="row wrap">
+        <div class="field"><label class="f" for="tFrom">From <span class="ar">من</span></label><input id="tFrom" required maxlength="120" placeholder="e.g. Ain Sokhna site"></div>
+        <div class="field"><label class="f" for="tTo">To <span class="ar">إلى</span></label><input id="tTo" required maxlength="120" placeholder="e.g. Cairo head office"></div>
+      </div>
+      <div class="field"><label class="toggle"><input type="checkbox" id="tRound"> Round trip <span class="ar">ذهاب وعودة</span></label></div>
+      <div class="field" id="tBackBox" hidden><label class="f" for="tBack">Return date &amp; time <span class="ar">موعد العودة</span></label><input id="tBack" type="datetime-local"></div>
+      <div class="field"><label class="f" for="tPax">Passengers <span class="ar">عدد الأفراد</span></label><input id="tPax" type="number" min="1" max="14" value="1" inputmode="numeric"></div>
+      <div class="field"><label class="f" for="tWhy">Work reason <span class="ar">سبب الانتقال</span></label><textarea id="tWhy" required maxlength="600" placeholder="e.g. meeting with supplier, document signing at HQ"></textarea></div>
+      <button class="btn" type="submit" id="tSend">Send request</button>
+    </form>
+  </section>
+
+  <!-- DRIVER TRIPS -->
+  <section class="view" id="v-trips" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>My trips</h2><span class="ar">رحلاتي</span></div></div>
+    <div class="msg"></div>
+    <div class="panel" id="tripList"><div class="loading">Loading…</div></div>
+  </section>
+
+  <!-- ADMIN CONSOLE -->
+  <section class="view" id="v-admin" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>Control room</h2><span class="ar">لوحة التحكم</span></div></div>
+    <div class="msg"></div>
+    <div class="updated" style="margin:-6px 0 12px"><span id="aUpdated">Loading…</span><button type="button" id="aRefresh">↻ Refresh</button></div>
+    <div class="kpis" id="aKpis"></div>
+    <div class="segs" id="aSegs"></div>
+    <div id="aPanes"></div>
+  </section>
+
   <!-- MY REQUESTS -->
   <section class="view" id="v-mine" hidden>
     <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>My requests</h2><span class="ar">طلباتي</span></div></div>
@@ -478,7 +587,10 @@
     if (m.supplies) add('supplies', '📎', 'Office supplies', 'الأدوات المكتبية', 'Pens, paper, files…');
     if (m.housing) add('housing', '🏠', 'Housing', 'صيانة ونظافة السكن', me.unit + ' · ' + me.resort);
     if (m.fuel) add('fuel', '⛽', 'Fuel entry', 'تسجيل البنزين', 'Odometer, amount, photos', 'fuel');
+    if (m.trips) add('trips', '🗓️', 'My trips', 'رحلاتي', 'Trips assigned to you', 'trans');
+    if (m.transport) add('transport', '🚐', 'Transport', 'طلب انتقال', 'Work trips · 48 h notice', 'trans');
     add('mine', '📋', 'My requests', 'طلباتي', 'Status of everything you sent', 'wide');
+    if (m.admin) add('admin', '🛰️', 'Control room', 'لوحة التحكم', 'Live numbers, approvals and reports', 'wide admin');
   }
 
   /* ---------------- navigation ---------------- */
@@ -492,6 +604,10 @@
     if (v === 'housing' && !housing) loadHousing();
     if (v === 'fuel' && !fuel) loadFuel();
     if (v === 'mine') loadMine();
+    if (v === 'transport') loadTransport();
+    if (v === 'trips') loadTrips();
+    if (v === 'admin') loadAdmin();
+    document.body.classList.toggle('wide', v === 'admin');
     actionBar();
   }
 
@@ -735,8 +851,259 @@
     section('Office supplies', r.supplies, q => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', q.id)); h.appendChild(el('span', '', q.date)); c.appendChild(h);
       q.lines.forEach(x => { const l = el('div', 'ln'); l.appendChild(el('span', '', x.qty + ' × ' + x.item + (x.remarks ? ' — ' + x.remarks : ''))); l.appendChild(badge(x.status)); c.appendChild(l); }); return c; });
     section('Meals coming up', r.meals, m => { const l = el('div', 'ln'); l.appendChild(el('span', '', m.label)); l.appendChild(el('b', '', split(m.choice)[0] + (m.meal ? ' — ' + m.meal : ''))); return l; });
+    section('Transport', r.transport, q => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', q.id)); h.appendChild(el('span', '', q.date)); c.appendChild(h);
+      const l = el('div', 'ln'); l.appendChild(el('span', '', q.from + ' → ' + q.to + (q.round ? ' (round trip)' : '') + (q.driver ? ' · Driver: ' + q.driver : '') + (q.remarks ? ' — ' + q.remarks : ''))); l.appendChild(badge(q.status)); c.appendChild(l); return c; });
     section('Fuel entries', r.fuel, f => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', f.id)); h.appendChild(el('span', '', f.date)); c.appendChild(h);
       const l = el('div', 'ln'); l.appendChild(el('span', '', f.plate + ' · ' + Number(f.km).toLocaleString('en') + ' km · ' + f.amount + ' EGP' + (f.liters ? ' · ' + f.liters + ' L' : ''))); l.appendChild(badge(f.status)); c.appendChild(l); return c; });
+  }
+
+  /* ---------------- transport ---------------- */
+  let tInfo = null;
+  async function loadTransport() {
+    try { tInfo = await api('getTransport'); } catch (e) { return say(e.message); }
+    $('tRule').firstChild.textContent = 'Work trips only. Request at least ' + tInfo.hours + ' hours before the trip — earliest: ' + tInfo.earliestText + '. ';
+    $('tWhen').min = tInfo.earliest; if (!$('tWhen').value) $('tWhen').value = tInfo.earliest;
+  }
+  $('tRound').onchange = () => { $('tBackBox').hidden = !$('tRound').checked; $('tBack').required = $('tRound').checked; if ($('tRound').checked && !$('tBack').value && $('tWhen').value) {
+      const d = new Date($('tWhen').value); d.setHours(d.getHours() + 4);
+      const z = n => String(n).padStart(2, '0'); $('tBack').value = d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()) + 'T' + z(d.getHours()) + ':' + z(d.getMinutes()); } };
+  $('transForm').addEventListener('submit', async e => {
+    e.preventDefault(); clearMsg();
+    const b = $('tSend'); b.disabled = true; b.textContent = 'Sending…';
+    try {
+      const r = await api('submitTransport', { when: $('tWhen').value, from: $('tFrom').value, to: $('tTo').value, round: $('tRound').checked,
+        back: $('tBack').value, passengers: $('tPax').value, reason: $('tWhy').value });
+      $('transForm').reset(); $('tBackBox').hidden = true; $('tWhen').value = tInfo ? tInfo.earliest : '';
+      done('Request sent', r.requestId, 'Admin will review it. You can follow it in My requests.');
+    } catch (err) { say(err.message); }
+    b.disabled = false; b.textContent = 'Send request';
+  });
+
+  /* ---------------- driver trips ---------------- */
+  async function loadTrips() {
+    const box = $('tripList'); box.innerHTML = '<div class="loading">Loading…</div>';
+    let list; try { list = await api('myTrips'); } catch (e) { box.innerHTML = ''; return say(e.message); }
+    box.innerHTML = '';
+    if (!list.length) return box.appendChild(el('div', 'empty', 'No trips assigned to you yet.'));
+    list.forEach(t => {
+      const c = el('div', 'trip');
+      c.appendChild(el('div', 'when', t.date));
+      const r = el('div', 'route2'); r.appendChild(el('span', '', t.from)); r.appendChild(el('i')); r.appendChild(el('span', '', '🚐')); r.appendChild(el('i')); r.appendChild(el('span', '', t.to)); c.appendChild(r);
+      if (t.back) c.appendChild(el('small', '', 'Return: ' + t.back));
+      c.appendChild(el('small', '', t.name + ' · ' + t.dept + ' · ' + t.passengers + ' passenger(s)' + (t.plate ? ' · ' + t.plate : '')));
+      if (t.mobile) { const a = el('a', '', '📞 Call ' + t.mobile); a.href = 'tel:' + t.mobile.replace(/[^\d+]/g, ''); c.appendChild(a); }
+      if (t.remarks) c.appendChild(el('small', '', 'Note: ' + t.remarks));
+      box.appendChild(c);
+    });
+  }
+
+  /* ---------------- admin console ---------------- */
+  let AD = null, aTab = 'housing', hFilter = 'open', mDay = -1;
+  const PANES = [['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel']];
+  function toast(t) { const d = el('div', 'toast', t); document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
+  const pill = (t, cls) => el('span', 'pill ' + (cls || ''), t);
+  const stCls = s => /Completed|Issued|Approved/.test(s) ? 'green' : /Progress|Assigned|Query|Hold/.test(s) ? 'amber' : /Cancelled|Rejected|Not Available/.test(s) ? 'grey' : '';
+  function ago(ts) { if (!ts) return ''; const h = (Date.now() - ts) / 36e5; return h < 1 ? Math.max(1, Math.round(h * 60)) + ' min ago' : h < 48 ? Math.round(h) + ' h ago' : Math.round(h / 24) + ' days ago'; }
+  function sel(options, value, onchange, blank) {
+    const s = el('select'); if (blank !== undefined) s.appendChild(new Option(blank, ''));
+    options.forEach(o => s.appendChild(new Option(o, o))); s.value = value || ''; s.onchange = () => onchange(s.value, s); return s;
+  }
+  async function update(table, id, changes, msgText) {
+    try { await api('adminUpdate', { table: table, id: id, changes: changes }); toast(msgText || '✓ Saved'); await loadAdmin(true); }
+    catch (e) { toast('⚠️ ' + e.message); }
+  }
+  $('aRefresh').onclick = () => loadAdmin();
+  async function loadAdmin(quiet) {
+    if (!quiet) $('aUpdated').textContent = 'Loading…';
+    try { AD = await api('adminData'); } catch (e) { $('aUpdated').textContent = ''; return say(e.message); }
+    $('aUpdated').textContent = 'Updated ' + AD.generated;
+    drawKpis(); drawSegs(); drawPane();
+  }
+  function drawKpis() {
+    const k = AD.kpis, box = $('aKpis'); box.innerHTML = '';
+    const card = (tab, c, n, t, sub, alert) => {
+      const b = el('button', 'kpi' + (alert ? ' alert' : '')); b.type = 'button'; b.style.setProperty('--c', c); b.onclick = () => { aTab = tab; drawSegs(); drawPane(); };
+      b.appendChild(el('span', 't', t)); b.appendChild(el('span', 'n', String(n))); b.appendChild(el('span', 's', sub)); box.appendChild(b);
+    };
+    card('housing', '#B45309', k.housingOpen, 'Open housing', k.emergencies ? k.emergencies + ' emergency · ' + k.overdue + ' over 72 h' : k.overdue + ' over 72 h', k.emergencies > 0);
+    card('meals', '#0F766E', k.mealTotal, 'Meals ' + (k.mealDate || ''), k.mealMissing + ' not chosen yet');
+    card('supplies', '#2456AD', k.supplyLines, 'Supply lines to issue', k.supplyRequests + ' request(s)');
+    card('transport', '#7C3AED', k.transportNew, 'Trips to approve', k.transportWeek + ' approved this week', k.transportNew > 0);
+    card('fuel', '#475569', k.fuelEgp.toLocaleString('en') + ' EGP', 'Fuel this month', k.fuelFlagged + ' flagged · ' + k.fuelPending + ' to check', k.fuelFlagged > 0);
+  }
+  function drawSegs() {
+    const k = AD.kpis, badge = { housing: k.emergencies || 0, transport: k.transportNew, fuel: k.fuelFlagged, supplies: 0, meals: 0 };
+    const box = $('aSegs'); box.innerHTML = '';
+    PANES.forEach(([id, label]) => {
+      const b = el('button', id === aTab ? 'on' : '', label); b.type = 'button';
+      if (badge[id]) b.appendChild(el('span', 'dot', String(badge[id])));
+      b.onclick = () => { aTab = id; drawSegs(); drawPane(); }; box.appendChild(b);
+    });
+  }
+  function drawPane() {
+    const box = $('aPanes'); box.innerHTML = '';
+    ({ housing: paneHousing, meals: paneMeals, supplies: paneSupplies, transport: paneTransport, fuel: paneFuel })[aTab](box);
+  }
+  function bars(rows, color, onClick) {
+    const max = Math.max(1, ...rows.map(r => r[1])), w = el('div', 'bars');
+    rows.forEach(r => {
+      const row = el('div', 'barrow' + (onClick ? ' click' : '')); row.style.setProperty('--c', r[2] || color);
+      row.appendChild(el('span', 'lbl', r[0])); const tr = el('div', 'track'), f = el('div', 'fill'); f.style.width = (r[1] / max * 100) + '%'; tr.appendChild(f);
+      row.appendChild(tr); row.appendChild(el('b', '', String(r[1])));
+      if (onClick) row.onclick = () => onClick(r, row);
+      w.appendChild(row);
+    });
+    return w;
+  }
+
+  function paneHousing(box) {
+    const f = el('div', 'filters');
+    [['open', 'Open'], ['urgent', 'Emergencies'], ['done', 'Recently closed']].forEach(([k, t]) => {
+      const b = el('button', 'cat' + (hFilter === k ? ' on' : ''), t); b.type = 'button'; b.onclick = () => { hFilter = k; drawPane(); }; f.appendChild(b);
+    });
+    const send = el('button', 'btn small line', '✉️ Send open list to company'); send.type = 'button'; send.style.marginLeft = 'auto';
+    send.onclick = async () => { try { const r = await api('adminSend', { kind: 'housing' }); toast('✓ Sent — ' + r.sent + ' open request(s)'); } catch (e) { toast('⚠️ ' + e.message); } };
+    f.appendChild(send); box.appendChild(f);
+    const open = s => !/Completed|Cancelled/.test(s);
+    const list = AD.housing.filter(h => hFilter === 'open' ? open(h.status) : hFilter === 'urgent' ? open(h.status) && h.urgent : !open(h.status));
+    if (!list.length) return box.appendChild(el('div', 'empty', hFilter === 'done' ? 'Nothing closed yet.' : 'No open requests. ✓'));
+    list.sort((a, b) => (b.urgent - a.urgent) || (a.ts - b.ts)).forEach(h => {
+      const c = el('div', 'card' + (h.urgent && open(h.status) ? ' urgent' : ''));
+      const top = el('div', 'top'), l = el('div');
+      l.appendChild(el('div', 'ttl', h.unit + ' · ' + h.resort)); l.appendChild(el('div', 'meta', h.id + ' · ' + h.cat.split(' - ')[0] + ' · ' + h.name + ' · ' + ago(h.ts)));
+      top.appendChild(l); const pr = el('div'); if (h.urgent) pr.appendChild(pill('Emergency', 'red')); pr.appendChild(pill(h.status, stCls(h.status))); top.appendChild(pr);
+      c.appendChild(top); c.appendChild(el('div', 'desc', h.desc));
+      const links = el('div', 'links');
+      if (h.phone) { const a = el('a', '', '📞 ' + h.phone); a.href = 'tel:' + h.phone.replace(/[^\d+]/g, ''); links.appendChild(a); }
+      if (h.location) { const a = el('a', '', '📍 Map'); a.href = h.location; a.target = '_blank'; links.appendChild(a); }
+      if (h.photo) { const a = el('a', '', '📷 Photo'); a.href = h.photo; a.target = '_blank'; links.appendChild(a); }
+      if (h.hours) links.appendChild(el('span', '', '⏱ ' + h.hours + ' h to close'));
+      c.appendChild(links);
+      const ctrl = el('div', 'ctrl');
+      ctrl.appendChild(sel(AD.lists.houseStatus, h.status, v => update('housing', h.id, { Status: v }, '✓ ' + h.id + ' → ' + v)));
+      ctrl.appendChild(sel(AD.lists.assignees, h.assigned, v => update('housing', h.id, { 'Assigned To': v }, '✓ Assigned'), 'Assign to…'));
+      const rm = el('input', 'full'); rm.placeholder = 'Admin remark (press Enter to save)'; rm.value = h.remarks;
+      rm.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); update('housing', h.id, { 'Admin Remarks': rm.value }, '✓ Remark saved'); } };
+      ctrl.appendChild(rm); c.appendChild(ctrl); box.appendChild(c);
+    });
+  }
+
+  function paneMeals(box) {
+    if (!AD.meals.length) return box.appendChild(el('div', 'empty', 'No menu for the coming days. Paste it in the Menu Entry tab.'));
+    if (mDay < 0 || mDay >= AD.meals.length) { const t = new Date(); const today = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+      mDay = Math.max(0, AD.meals.findIndex(d => d.date > today)); }
+    const chips = el('div', 'daychips');
+    AD.meals.forEach((d, i) => {
+      const tot = d.counts.MAIN + d.counts.ALT + d.counts.INDIAN + d.counts.DIET + d.counts.SANDWICH;
+      const b = el('button', i === mDay ? 'on' : ''); b.type = 'button'; b.appendChild(document.createTextNode(d.label)); b.appendChild(el('b', '', String(tot)));
+      b.onclick = () => { mDay = i; drawPane(); }; chips.appendChild(b);
+    });
+    box.appendChild(chips);
+    const d = AD.meals[mDay], c = el('div', 'card');
+    const tot = d.counts.MAIN + d.counts.ALT + d.counts.INDIAN + d.counts.DIET + d.counts.SANDWICH;
+    const bn = el('div', 'bignum'); bn.appendChild(el('b', '', String(tot))); bn.appendChild(el('span', '', 'meals · ' + d.dayAr + ' ' + d.label)); c.appendChild(bn);
+    const mm = el('div', 'meta'); mm.appendChild(document.createTextNode('Main: ')); mm.appendChild(ar(d.main)); mm.lastChild.style.display = 'inline';
+    if (d.alt) { mm.appendChild(document.createTextNode('   ·   Alternative: ')); mm.appendChild(ar(d.alt)); mm.lastChild.style.display = 'inline'; }
+    c.appendChild(mm);
+    const two = el('div', 'twocol'); two.style.marginTop = '14px';
+    const colors = { MAIN: '#0F766E', ALT: '#14B8A6', INDIAN: '#E8A33D', DIET: '#65A30D', SANDWICH: '#2456AD', NONE: '#94A3B8' };
+    const rows = AD.lists.choices.map(ch => [ch.en + ' · ' + ch.ar, d.counts[ch.key], colors[ch.key], ch.key]);
+    rows.push(['Not chosen · لم يختار', d.missing.length, '#DC2626', 'MISSING']);
+    two.appendChild(bars(rows, '#0F766E'));
+    const names = el('div');
+    rows.forEach(r => {
+      const list = r[3] === 'MISSING' ? d.missing : d.groups[r[3]];
+      if (!list.length) return;
+      const det = el('details', 'grp'); det.appendChild(el('summary', '', r[0] + ' (' + list.length + ')'));
+      const n = el('div', 'names'); list.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); names.appendChild(det);
+    });
+    two.appendChild(names); c.appendChild(two);
+    const br = el('div', 'btnrow');
+    [['kitchen', '✉️ Send counts to kitchen', AD.mail.kitchen], ['buffet', '✉️ Send names to buffet', AD.mail.buffet]].forEach(([kind, t, okMail]) => {
+      const b = el('button', 'btn small' + (okMail ? '' : ' line'), t + (okMail ? '' : ' (add e-mail in Settings)')); b.type = 'button'; b.disabled = !okMail;
+      b.onclick = async () => { b.disabled = true; try { const r = await api('adminSend', { kind: kind, date: d.date }); toast('✓ Sent — ' + r.sent + ' meals'); } catch (e) { toast('⚠️ ' + e.message); } b.disabled = false; };
+      br.appendChild(b);
+    });
+    c.appendChild(br); box.appendChild(c);
+  }
+
+  function paneSupplies(box) {
+    const S = AD.supplies, two = el('div', 'twocol');
+    const c1 = el('div', 'card'); c1.appendChild(el('div', 'ttl', 'To issue / buy — tap an item to see who asked'));
+    c1.lastChild.style.marginBottom = '12px';
+    if (!S.items.length) c1.appendChild(el('div', 'empty', 'Nothing pending. ✓'));
+    else c1.appendChild(bars(S.items.map(i => [i.item + (i.other ? ' *' : ''), i.qty, i.other ? '#E8A33D' : '#2456AD', i]), '#2456AD', (r, row) => {
+      const nx = row.nextSibling; if (nx && nx.classList && nx.classList.contains('people')) return nx.remove();
+      const p = el('div', 'people'); r[3].people.forEach(x => { const d = el('div'); d.appendChild(el('span', '', x.name + ' · ' + x.dept + ' · ' + x.id)); d.appendChild(el('b', '', x.qty + ' ' + r[3].unit)); p.appendChild(d); });
+      row.after(p);
+    }));
+    if (S.items.some(i => i.other)) c1.appendChild(el('div', 'hint', '* not in the catalog — typed by the employee'));
+    const c2 = el('div', 'card'); c2.appendChild(el('div', 'ttl', 'Requests waiting'));
+    if (!S.requests.length) c2.appendChild(el('div', 'empty', 'No requests waiting.'));
+    S.requests.forEach(q => {
+      const r = el('div', 'req'); const h = el('div', 'h'); h.appendChild(el('b', '', q.name)); h.appendChild(el('span', '', q.id + ' · ' + q.date)); r.appendChild(h);
+      q.lines.forEach(l => { const d = el('div', 'ln'); d.appendChild(el('span', '', l.item)); d.appendChild(el('b', '', l.qty + ' ' + l.unit)); r.appendChild(d); });
+      if (q.notes) r.appendChild(el('div', 'hint', 'Notes: ' + q.notes));
+      const br = el('div', 'btnrow');
+      const ok = el('button', 'btn small green', '✓ Mark issued'); ok.type = 'button'; ok.onclick = () => update('supplies', q.id, { Status: 'Issued' }, '✓ ' + q.id + ' issued');
+      const na = el('button', 'btn small line', 'Not available'); na.type = 'button'; na.onclick = () => update('supplies', q.id, { Status: 'Not Available' }, q.id + ' → not available');
+      br.appendChild(ok); br.appendChild(na); r.appendChild(br); c2.appendChild(r);
+    });
+    two.appendChild(c1); two.appendChild(c2); box.appendChild(two);
+    const dept = Object.entries(S.byDept).sort((a, b) => b[1] - a[1]);
+    if (dept.length) { const c3 = el('div', 'card'); c3.appendChild(el('div', 'ttl', 'This month by department')); c3.lastChild.style.marginBottom = '12px'; c3.appendChild(bars(dept.map(d => [d[0], d[1]]), '#64748B')); box.appendChild(c3); }
+  }
+
+  function paneTransport(box) {
+    if (!AD.transport.length) return box.appendChild(el('div', 'empty', 'No transport requests yet.'));
+    AD.transport.forEach(t => {
+      const c = el('div', 'card'), top = el('div', 'top'), l = el('div');
+      l.appendChild(el('div', 'ttl', t.date + '  ·  ' + t.from + ' → ' + t.to));
+      l.appendChild(el('div', 'meta', t.id + ' · ' + t.name + ' · ' + t.dept + ' · ' + t.pax + ' pax' + (t.round ? ' · return ' + t.back : ' · one way')));
+      top.appendChild(l); top.appendChild(pill(t.status, stCls(t.status))); c.appendChild(top);
+      c.appendChild(el('div', 'desc', '“' + t.reason + '”'));
+      const ctrl = el('div', 'ctrl');
+      const drv = sel(AD.lists.drivers, t.driver, v => update('transport', t.id, { 'Assigned Driver': v }, '✓ Driver assigned'), 'Driver…');
+      const car = sel(AD.lists.plates, t.plate, v => update('transport', t.id, { Vehicle: v }, '✓ Vehicle set'), 'Vehicle…');
+      ctrl.appendChild(drv); ctrl.appendChild(car); c.appendChild(ctrl);
+      const br = el('div', 'btnrow');
+      if (t.status === 'New') {
+        const ap = el('button', 'btn small green', '✓ Approve'); ap.type = 'button';
+        ap.onclick = () => { if (!drv.value && !confirm('Approve without a driver? You can assign one later.')) return;
+          update('transport', t.id, Object.assign({ Status: 'Approved' }, drv.value ? { 'Assigned Driver': drv.value } : {}, car.value ? { Vehicle: car.value } : {}), '✓ ' + t.id + ' approved'); };
+        const rj = el('button', 'btn small red', 'Reject'); rj.type = 'button';
+        rj.onclick = () => { const why = prompt('Reason for rejecting (optional):', ''); if (why === null) return; update('transport', t.id, { Status: 'Rejected', 'Admin Remarks': why }, t.id + ' rejected'); };
+        br.appendChild(ap); br.appendChild(rj);
+      } else {
+        br.appendChild(sel(AD.lists.transStatus, t.status, v => update('transport', t.id, { Status: v }, '✓ ' + t.id + ' → ' + v)));
+      }
+      c.appendChild(br); box.appendChild(c);
+    });
+  }
+
+  function paneFuel(box) {
+    if (AD.fuelByPlate.length) {
+      const c = el('div', 'card'); c.appendChild(el('div', 'ttl', 'This month by vehicle (EGP)')); c.lastChild.style.marginBottom = '12px';
+      c.appendChild(bars(AD.fuelByPlate.map(v => [v.plate, Math.round(v.egp)]), '#7C3AED'));
+      c.appendChild(el('div', 'hint', AD.fuelByPlate.map(v => v.plate + ': ' + v.fills + ' fill(s), ' + v.km + ' km' + (v.km ? ', ' + (v.egp / v.km).toFixed(2) + ' EGP/km' : '')).join(' · ')));
+      box.appendChild(c);
+    }
+    if (!AD.fuel.length) return box.appendChild(el('div', 'empty', 'No fuel entries yet.'));
+    AD.fuel.forEach(f => {
+      const c = el('div', 'card' + (f.flags && f.check !== 'Approved' ? ' urgent' : '')), top = el('div', 'top'), l = el('div');
+      l.appendChild(el('div', 'ttl', f.plate + ' · ' + Number(f.km).toLocaleString('en') + ' km · ' + f.amount + ' EGP'));
+      l.appendChild(el('div', 'meta', f.id + ' · ' + f.driver + ' · ' + f.date + (f.dist ? ' · ' + f.dist + ' km since last' : '') + (f.kmpl ? ' · ' + f.kmpl + ' km/L' : '') + (f.egpkm ? ' · ' + f.egpkm + ' EGP/km' : '')));
+      top.appendChild(l); top.appendChild(pill(f.check, stCls(f.check))); c.appendChild(top);
+      if (f.flags) c.appendChild(el('div', 'desc', '⚠️ ' + f.flags));
+      const links = el('div', 'links');
+      ['🧾 Receipt', '⏱️ Odometer', '⛽ Pump'].forEach((t, i) => { if (f.photos[i]) { const a = el('a', '', t); a.href = f.photos[i]; a.target = '_blank'; links.appendChild(a); } });
+      c.appendChild(links);
+      const br = el('div', 'btnrow');
+      [['Approved', 'green', '✓ Approve'], ['Query', 'line', '? Query'], ['Rejected', 'red', 'Reject']].forEach(([st, cls, t]) => {
+        if (f.check === st) return; const b = el('button', 'btn small ' + cls, t); b.type = 'button'; b.onclick = () => update('fuel', f.id, { 'Admin Check': st }, f.id + ' → ' + st); br.appendChild(b);
+      });
+      c.appendChild(br); box.appendChild(c);
+    });
   }
 
   /* ---------------- action bar ---------------- */
