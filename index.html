@@ -43,16 +43,78 @@
   .route { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-family: var(--cond); font-size: 15px; color: var(--slate); }
   .route b { font-size: 22px; color: var(--ink); font-weight: 700; }
   .route .path { flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); position: relative; }
-  .route .path::after { content: "✈"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); color: var(--blue); background: #fff; padding: 0 6px; font-size: 16px; }
+  .route .plane { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%); color: var(--blue); background: #fff; padding: 0 6px; font-size: 16px; line-height: 1; }
+  .pass.takeoff .plane { animation: takeoff 1.1s cubic-bezier(.5,0,.75,0) forwards; }
+  @keyframes takeoff {
+    0%   { transform: translate(-50%, -54%); }
+    45%  { transform: translate(110px, -54%); background: transparent; }
+    100% { transform: translate(260px, -170px) rotate(-28deg) scale(1.6); opacity: 0; background: transparent; }
+  }
+  .pass.takeoff .path { background: repeating-linear-gradient(90deg, var(--amber) 0 8px, transparent 8px 14px); transition: background .3s; }
+  .pass.leave { animation: leave .45s ease-in forwards; }
+  @keyframes leave { to { transform: translateY(-30px); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .pass.takeoff .plane, .pass.leave { animation: none; } }
   .perf { position: relative; height: 22px; }
   .perf::before { content: ""; position: absolute; left: 22px; right: 22px; top: 10px; border-top: 2px dashed var(--line); }
   .perf::after, .perf i { content: ""; position: absolute; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--night); }
   .perf::after { right: -11px; } .perf i { left: -11px; }
   .pass-form { padding: 14px 26px 26px; }
+  .pwhint { display: block; margin-top: 6px; color: var(--slate); font-size: 12.5px; }
+  .salary .mon { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .salary .mon b { font-family: var(--cond); font-size: 30px; }
+  .salary .ln { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+  .salary .ln.deduction span:last-child { color: #DC2626; }
+  .salary .ln.total { font-weight: 700; }
+  .salary .ln.net { font-weight: 800; font-size: 17px; border-bottom: 0; color: #15803D; }
+  .pwlink { display: block; margin: 18px auto 0; background: none; border: 0; color: var(--slate); font-size: 14px; cursor: pointer; padding: 8px; }
+  .pwlink:hover { color: var(--blue); }
+  .nudge { display: flex; gap: 12px; align-items: center; background: #FFF4DC; border: 1px solid #F3D9A4; border-radius: 16px; padding: 12px 14px; margin: 0 0 14px; cursor: pointer; text-align: left; width: 100%; font: inherit; color: inherit; }
+  .nudge b { display: block; } .nudge small { color: var(--slate); }
   .stub { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
   .stub div { font-size: 12px; color: var(--slate); }
   .stub b { display: block; font-family: var(--cond); font-size: 19px; color: var(--ink); font-weight: 600; }
   .fine { margin: 16px 0 0; font-size: 13px; color: var(--slate); line-height: 1.55; }
+
+
+  /* ================= BUS — boarding ticket + seats ================= */
+  .tile.bus .ico { background: #EDE7FE; }
+  .ticket { position: relative; background: linear-gradient(135deg, #0E2A5C 0%, #233C7A 100%); color: #fff; border-radius: 20px; padding: 18px 20px 16px; margin-bottom: 16px; overflow: hidden; }
+  .ticket::after { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(232,163,61,.12); }
+  .ticket .lab { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #9FB3D9; }
+  .ticket .bn { font-family: var(--cond); font-size: 34px; font-weight: 700; line-height: 1.05; margin: 2px 0 2px; }
+  .ticket .rt { color: #C9D6EE; font-size: 14px; }
+  .ticket .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1.5px dashed rgba(255,255,255,.25); }
+  .ticket .row3 b { display: block; font-family: var(--cond); font-size: 21px; font-weight: 600; color: #fff; }
+  .ticket .row3 .pk b { font-size: 16px; font-family: var(--ui); unicode-bidi: plaintext; }
+  .bulk { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+  .bulk button { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 13px; font-size: 13.5px; font-weight: 600; cursor: pointer; color: var(--ink); }
+  .bulk button:hover { border-color: var(--blue); color: var(--blue); }
+  .bday { border: 1.5px solid var(--line); border-radius: 18px; margin-bottom: 12px; background: #fff; overflow: hidden; }
+  .bday .dayh { background: #F4F1FE; }
+  .bday.shut { opacity: .78; } .bday.shut .dayh { background: #EEF1F6; }
+  .seats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 14px 4px; }
+  .seat { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 2px solid var(--line); border-radius: 16px; padding: 14px 8px 12px; background: #fff; cursor: pointer; text-align: center; font: inherit; color: inherit; transition: border-color .15s, background .15s, transform .1s; }
+  .seat:active { transform: scale(.98); }
+  .seat svg { width: 46px; height: 46px; flex: none; }
+  .seat svg .s { fill: #E9EDF3; stroke: #B8C3D4; stroke-width: 1.5; transition: fill .15s, stroke .15s; }
+  .seat .tx b { display: block; font-family: var(--cond); font-size: 19px; line-height: 1.1; white-space: nowrap; }
+  .seat .tx small { color: var(--slate); font-size: 12.5px; }
+  .seat .tag { position: absolute; top: -9px; left: 50%; margin-left: -46px; width: 92px; text-align: center; white-space: nowrap; background: var(--amber); color: #3B2400; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: .15s; }
+  .seat.on { border-color: var(--amber); background: #FFF8EA; }
+  .seat.on svg .s { fill: var(--amber); stroke: var(--amber-d); }
+  .seat.on .tag { opacity: 1; transform: none; }
+  .seat:disabled { cursor: default; }
+  .bfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px 12px; flex-wrap: wrap; }
+  .norides { border: 0; background: none; color: var(--slate); font-size: 13.5px; cursor: pointer; padding: 6px 0; font-weight: 600; }
+  .norides.on { color: #B91C1C; }
+  .occ { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--slate); }
+  .occ i { display: grid; grid-template-columns: repeat(14, 7px); gap: 2px; }
+  .occ i span { width: 7px; height: 7px; border-radius: 2px; background: #E3E8F0; }
+  .occ i span.f { background: #A78BFA; } .occ i span.me { background: var(--amber); }
+  .merged { font-size: 12px; color: #6D28D9; font-weight: 700; }
+  .rlist { counter-reset: r; } .rlist div { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .rlist div::before { counter-increment: r; content: counter(r); width: 22px; height: 22px; flex: none; border-radius: 50%; background: #EDE7FE; color: #6D28D9; font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+  .rlist small { color: var(--slate); display: block; unicode-bidi: plaintext; }
 
   /* ================= FORM CONTROLS ================= */
   label.f { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
@@ -251,6 +313,11 @@
   .daychips button { flex: none; border: 1.5px solid var(--line); background: #fff; border-radius: 12px; padding: 8px 12px; cursor: pointer; text-align: center; line-height: 1.2; }
   .daychips button b { display: block; font-family: var(--cond); font-size: 18px; }
   .daychips button.on { border-color: var(--night); background: var(--night); color: #fff; }
+  .daychips button { min-width: 92px; }
+  .daychips button small { display: block; font-size: 11px; color: var(--slate); margin-top: 3px; white-space: nowrap; }
+  .daychips button.on small { color: #C9D6EE; }
+  .daychips button i { display: block; font-style: normal; font-size: 10px; margin-top: 2px; }
+  .daychips button.nomenu { opacity: .5; }
   .bignum { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 12px; }
   .bignum b { font-family: var(--cond); font-size: 56px; line-height: 1; }
   .names { columns: 2; column-gap: 20px; font-size: 14px; } .names div { break-inside: avoid; padding: 2px 0; }
@@ -283,7 +350,7 @@
       <h1 id="bName">SAFfly Crew</h1>
       <p class="tag" id="bTag">You build the fuel of the future.<br>We take care of everything else.</p>
       <p class="sign" id="bSign">— Your Admin &amp; HR team</p>
-      <div class="route"><b>Check in</b><span class="path"></span><b>On site</b></div>
+      <div class="route"><b>Check in</b><span class="path"><span class="plane">✈</span></span><b>On site</b></div>
     </div>
     <div class="perf"><i></i></div>
     <div class="pass-form">
@@ -298,14 +365,15 @@
       </div>
       <div class="field" id="byMobile" hidden>
         <label class="f" for="mobile">Mobile number <span class="ar">رقم الموبايل</span></label>
-        <input id="mobile" type="tel" inputmode="tel" autocomplete="username" maxlength="20" placeholder="01xxxxxxxxx">
+        <input id="mobile" type="text" inputmode="tel" autocomplete="username" maxlength="20" placeholder="01xxxxxxxxx">
       </div>
       <div class="field">
         <label class="f" for="password">Password <span class="ar">كلمة المرور</span></label>
         <div class="pw">
-          <input id="password" type="password" required autocomplete="current-password" placeholder="Your code, e.g. SF-000">
+          <input id="password" type="password" required autocomplete="current-password" placeholder="First time: your code, e.g. SF-000">
           <button type="button" id="showPw">Show</button>
         </div>
+        <small class="pwhint" id="pwHint" hidden>First time: the last 5 digits of your national ID · آخر ٥ أرقام من الرقم القومي</small>
       </div>
       <button class="btn" id="loginBtn" type="submit">Sign in</button>
       <p class="fine">First time? Your password is your staff code. <span class="ar">كلمة المرور هي الكود الوظيفي</span></p>
@@ -325,6 +393,40 @@
     <h1 class="hello" id="hello">Hello</h1>
     <p class="sub" id="bHome">Welcome aboard. What do you need today?</p>
     <div class="tiles" id="tiles"></div>
+    <button type="button" class="pwlink" id="pwLink">🔑 Change my password <span class="ar">تغيير كلمة المرور</span></button>
+  </section>
+
+  <!-- BUS -->
+  <section class="view" id="v-bus" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>Bus</h2><span class="ar">حجز الباص</span></div></div>
+    <div class="msg"></div>
+    <div id="busBox"><div class="loading">Loading…</div></div>
+  </section>
+
+  <!-- SALARY -->
+  <section class="view" id="v-salary" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>My salary</h2><span class="ar">مرتبي</span></div></div>
+    <div class="msg"></div>
+    <form class="panel" id="salForm">
+      <p class="rule">Private: only you see your salary. The PIN is from HR. <span class="ar">خاص بك فقط — الرقم السري من الـ HR</span></p>
+      <div class="field"><label class="f" for="salPin">Salary PIN <span class="ar">الرقم السري للمرتب</span></label><input id="salPin" type="password" inputmode="numeric" autocomplete="off" maxlength="12" required></div>
+      <button class="btn" type="submit" id="salBtn">Show my salary</button>
+    </form>
+    <div id="salOut"></div>
+  </section>
+
+  <!-- PASSWORD -->
+  <section class="view" id="v-pass" hidden>
+    <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>My password</h2><span class="ar">كلمة المرور</span></div></div>
+    <div class="msg"></div>
+    <form class="panel" id="pwForm" autocomplete="on">
+      <p class="rule">Choose your own password — at least 6 letters or numbers. <span class="ar">اختر كلمة مرور خاصة بك — ٦ حروف أو أرقام على الأقل</span></p>
+      <div class="field"><label class="f" for="pwNew">New password <span class="ar">كلمة المرور الجديدة</span></label><input id="pwNew" type="password" required minlength="6" maxlength="40" autocomplete="new-password"></div>
+      <div class="field"><label class="f" for="pwNew2">Repeat it <span class="ar">أعد كتابتها</span></label><input id="pwNew2" type="password" required minlength="6" maxlength="40" autocomplete="new-password"></div>
+      <label class="toggle" style="margin-bottom:14px"><input type="checkbox" id="pwShow"> Show <span class="ar">إظهار</span></label>
+      <button class="btn" type="submit" id="pwSave">Save password</button>
+      <p class="fine">Forgot it? Ask Admin — he can tell you or reset it. <span class="ar">نسيتها؟ تواصل مع الإدارة</span></p>
+    </form>
   </section>
 
   <!-- MEALS -->
@@ -459,7 +561,8 @@
   <section class="view" id="v-admin" hidden>
     <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>Control room</h2><span class="ar">لوحة التحكم</span></div></div>
     <div class="msg"></div>
-    <div class="updated" style="margin:-6px 0 12px"><span id="aUpdated">Loading…</span><button type="button" id="aRefresh">↻ Refresh</button></div>
+    <div class="updated" style="margin:-6px 0 12px"><span id="aUpdated">Loading…</span><button type="button" id="aRefresh">↻ Refresh</button><button type="button" id="aMail">✉️ Test e-mails</button></div>
+    <div id="aMailOut"></div>
     <div class="kpis" id="aKpis"></div>
     <div class="segs" id="aSegs"></div>
     <div id="aPanes"></div>
@@ -552,7 +655,8 @@
   }
   api('getNames').then(r => {
     loginMode = r.mode; applyBrand(r.brand);
-    if (r.mode === 'Mobile') { $('byName').hidden = true; $('byMobile').hidden = false; $('mobile').value = recall('hub_mobile') || ''; return; }
+    if (r.mode === 'Mobile') { $('byName').hidden = true; $('byMobile').hidden = false; $('mobile').value = recall('hub_mobile') || '';
+      $('password').placeholder = '5 digits'; $('pwHint').hidden = false; return; }
     const s = $('name'); s.innerHTML = ''; s.appendChild(new Option('Choose your name', ''));
     r.names.forEach(n => s.appendChild(new Option(n, n)));
     const last = recall('hub_name'); if (last && r.names.includes(last)) s.value = last;
@@ -565,10 +669,19 @@
     if (!cred.name) { say(loginMode === 'Mobile' ? 'Enter your mobile number.' : 'Choose your name.', 'bad', $('loginMsg')); b.disabled = false; b.textContent = 'Sign in'; return; }
     try {
       me = await api('login', cred); auth = cred; store(loginMode === 'Mobile' ? 'hub_mobile' : 'hub_name', cred.name);
+      b.textContent = 'Cleared for take-off ✓';
+      await takeoff();
       $('login').hidden = true; $('app').hidden = false; buildHome(); go('home');
+      if (me.modules.admin) prefetchAdmin();
     } catch (err) { say(err.message, 'bad', $('loginMsg')); }
     b.disabled = false; b.textContent = 'Sign in';
   });
+  function takeoff() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return Promise.resolve();
+    const p = $('loginForm');
+    p.classList.add('takeoff');
+    return new Promise(res => setTimeout(() => { p.classList.add('leave'); setTimeout(res, 420); }, 900));
+  }
   $('signOut').onclick = () => { if (!dirty() || confirm('You have unsaved changes. Sign out anyway?')) { auth = null; location.reload(); } };
 
   /* ---------------- home ---------------- */
@@ -584,14 +697,63 @@
     };
     const m = me.modules;
     if (m.meals) add('meals', '🍽️', 'Meals', 'الوجبات', 'Choose your week');
+    if (m.bus) add('bus', '🚌', 'Bus', 'حجز الباص', 'Book your seat for the week', 'bus');
     if (m.supplies) add('supplies', '📎', 'Office supplies', 'الأدوات المكتبية', 'Pens, paper, files…');
     if (m.housing) add('housing', '🏠', 'Housing', 'صيانة ونظافة السكن', me.unit + ' · ' + me.resort);
     if (m.fuel) add('fuel', '⛽', 'Fuel entry', 'تسجيل البنزين', 'Odometer, amount, photos', 'fuel');
     if (m.trips) add('trips', '🗓️', 'My trips', 'رحلاتي', 'Trips assigned to you', 'trans');
     if (m.transport) add('transport', '🚐', 'Transport', 'طلب انتقال', 'Work trips · 48 h notice', 'trans');
+    if (me.payroll && me.role !== 'Resident') add('salary', '💰', 'My salary', 'مرتبي', 'Private · PIN from HR');
     add('mine', '📋', 'My requests', 'طلباتي', 'Status of everything you sent', 'wide');
     if (m.admin) add('admin', '🛰️', 'Control room', 'لوحة التحكم', 'Live numbers, approvals and reports', 'wide admin');
+    const old = document.querySelector('.nudge'); if (old) old.remove();
+    if (!me.ownPassword) {
+      const n = el('button', 'nudge'); n.type = 'button'; n.onclick = () => go('pass');
+      n.appendChild(el('span', '', '🔑')); n.firstChild.style.fontSize = '24px';
+      const tx = el('span'); tx.appendChild(el('b', '', 'Set your own password')); tx.appendChild(el('small', '', 'You are signing in with your code. Make it private · اختر كلمة مرور خاصة بك'));
+      n.appendChild(tx); t.parentNode.insertBefore(n, t);
+    }
   }
+  $('pwLink').onclick = () => go('pass');
+  /* ---------------- salary (HR's own system — nothing passes through the admin sheet) ---------------- */
+  $('salForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const b = $('salBtn'); b.disabled = true; b.textContent = 'Opening…'; $('salOut').innerHTML = ''; clearMsg();
+    try {
+      let res; try { res = await fetch(me.payroll, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'mySalary', payload: { code: me.code, pin: $('salPin').value.trim() } }) }); }
+      catch (x) { throw new Error('No connection. Check your internet and try again. · تأكد من الإنترنت'); }
+      const out = await res.json(); if (!out.ok) throw new Error(out.error || 'Something went wrong.');
+      $('salForm').hidden = true; $('salPin').value = '';
+      const box = $('salOut');
+      if (!out.data.months.length) box.appendChild(el('div', 'empty', 'No salary slip published yet · لا يوجد كشف مرتب بعد'));
+      const fmtN = v => Number(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      out.data.months.forEach((m, i) => {
+        const c = el(i ? 'details' : 'div', 'card salary');
+        const top = el(i ? 'summary' : 'div', 'mon'); top.appendChild(el('span', '', m.month)); if (m.net != null) top.appendChild(el('b', '', fmtN(m.net) + ' EGP'));
+        c.appendChild(top);
+        m.items.forEach(it => { const l = el('div', 'ln ' + it.kind); l.appendChild(el('span', '', it.label)); l.appendChild(el('span', '', (it.kind === 'deduction' ? '− ' : '') + fmtN(it.value))); c.appendChild(l); });
+        if (m.notes) c.appendChild(el('div', 'meta', m.notes));
+        box.appendChild(c);
+      });
+      const again = el('button', 'pwlink', '🔒 Hide'); again.type = 'button'; again.onclick = () => { box.innerHTML = ''; $('salForm').hidden = false; }; box.appendChild(again);
+    } catch (err) { say(err.message); }
+    b.disabled = false; b.textContent = 'Show my salary';
+  });
+  $('pwShow').onchange = () => ['pwNew', 'pwNew2'].forEach(i => $(i).type = $('pwShow').checked ? 'text' : 'password');
+  $('pwForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const a = $('pwNew').value, b2 = $('pwNew2').value;
+    if (a.length < 6) return say('At least 6 letters or numbers · ٦ حروف أو أرقام على الأقل');
+    if (a !== b2) return say('The two passwords are not the same · كلمتا المرور غير متطابقتين');
+    const btn = $('pwSave'); btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await api('changePassword', { newPassword: a });
+      auth.password = a; me.ownPassword = true; $('pwForm').reset();
+      buildHome(); go('home'); toast('✓ Password changed — use it next time · تم تغيير كلمة المرور');
+    } catch (err) { say(err.message); }
+    btn.disabled = false; btn.textContent = 'Save password';
+  });
 
   /* ---------------- navigation ---------------- */
   document.querySelectorAll('.back').forEach(b => b.onclick = () => go('home'));
@@ -600,6 +762,7 @@
     document.querySelectorAll('.view').forEach(s => s.hidden = s.id !== 'v-' + v);
     window.scrollTo(0, 0);
     if (v === 'meals' && !meals) loadMeals();
+    if (v === 'bus') loadBus();
     if (v === 'supplies' && !catalog) loadCatalog();
     if (v === 'housing' && !housing) loadHousing();
     if (v === 'fuel' && !fuel) loadFuel();
@@ -607,6 +770,7 @@
     if (v === 'transport') loadTransport();
     if (v === 'trips') loadTrips();
     if (v === 'admin') loadAdmin();
+    if (v !== 'salary') { $('salOut').innerHTML = ''; $('salForm').hidden = false; }
     document.body.classList.toggle('wide', v === 'admin');
     actionBar();
   }
@@ -653,6 +817,81 @@
       await loadMeals();
       if (r.skipped.length) say('Saved ' + r.saved + ' day(s). These days were closed and did not change: ' + r.skipped.join(', '), 'warn');
       else say('Meals saved for ' + r.saved + ' day(s). ✓ تم الحفظ', 'ok');
+    } catch (e) { say(e.message); }
+    actionBar();
+  }
+
+
+  /* ---------------- bus: seat booking ---------------- */
+  let bus = null, bpicks = {}, bsaved = {};
+  const SEAT_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true"><path class="s" d="M11 6h18a3 3 0 0 1 3 3v15H8V9a3 3 0 0 1 3-3z"/><path class="s" d="M5 22h30a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2z"/><path class="s" d="M9 31h4v4H9zM27 31h4v4h-4z"/></svg>';
+  const parts = k => ({ BOTH: [1, 1], TO: [1, 0], FROM: [0, 1], NONE: [0, 0] })[k] || [0, 0];
+  const join = (t, f) => t && f ? 'BOTH' : t ? 'TO' : f ? 'FROM' : 'NONE';
+  async function loadBus() {
+    $('busBox').innerHTML = '<div class="loading">Loading…</div>';
+    try { bus = await api('getBus'); } catch (e) { $('busBox').innerHTML = ''; return say(e.message); }
+    bpicks = {}; bsaved = {}; bus.days.forEach(d => { if (d.choice) bpicks[d.date] = bsaved[d.date] = d.choice; });
+    drawBus(); actionBar();
+  }
+  function drawBus() {
+    const box = $('busBox'); box.innerHTML = '';
+    const b = bus.bus, t = el('div', 'ticket');
+    t.appendChild(el('div', 'lab', 'Your bus · باصك'));
+    t.appendChild(el('div', 'bn', '🚌 ' + b.name)); if (b.route) t.appendChild(el('div', 'rt', b.route + (b.plate ? '  ·  ' + b.plate : '')));
+    const r3 = el('div', 'row3');
+    [['To site · ذهاب', b.to || '—', ''], ['Return · عودة', b.back || '—', ''], ['Pickup · الركوب', bus.pickup, 'pk']].forEach(([l, v, c]) => { const d = el('div', c); d.appendChild(el('span', 'lab', l)); d.appendChild(el('b', '', v)); r3.appendChild(d); });
+    t.appendChild(r3); box.appendChild(t);
+    if (!bus.days.length) return box.appendChild(el('div', 'empty', 'No bus days in the coming week.'));
+    const open = bus.days.filter(d => !d.locked);
+    if (open.length > 1) {
+      const bl = el('div', 'bulk');
+      [['💺 Both ways every day', 'BOTH'], ['🌅 To site only', 'TO'], ['🚫 Not riding this week', 'NONE']].forEach(([lbl, k]) => {
+        const x = el('button', '', lbl); x.type = 'button'; x.onclick = () => { open.forEach(d => bpicks[d.date] = k); drawBus(); actionBar(); }; bl.appendChild(x); });
+      box.appendChild(bl);
+    }
+    bus.days.forEach(d => {
+      const card = el('div', 'bday' + (d.locked ? ' shut' : ''));
+      const h = el('div', 'dayh'), tt = el('div'); tt.appendChild(el('b', '', d.label));
+      tt.appendChild(el('small', '', d.locked ? 'Closed for changes' : 'Book until ' + d.cutoff));
+      if (d.merged) tt.appendChild(el('span', 'merged', 'Today you ride with ' + d.bus + ' · النهارده مع ' + d.bus));
+      h.appendChild(tt); h.appendChild(el('span', 'chip ' + (d.locked ? 'shut' : 'open'), d.locked ? 'Closed' : 'Open'));
+      card.appendChild(h);
+      if (d.locked) {   // closed day: one compact line
+        const lbl = { BOTH: '💺 Both ways · ذهاب وعودة', TO: '🌅 To site only · ذهاب فقط', FROM: '🌇 Return only · عودة فقط', NONE: '🚫 Not riding · مش راكب' }[bsaved[d.date]] || '— Not booked · لم يتم الحجز';
+        const f = el('div', 'bfoot'); f.appendChild(el('span', '', lbl)); f.appendChild(el('span', 'occ', d.toCount + (d.seats ? ' / ' + d.seats : '') + ' to site')); card.appendChild(f);
+        return box.appendChild(card);
+      }
+      const [pt, pf] = parts(bpicks[d.date]), [st, sf] = parts(bsaved[d.date]);
+      const seats = el('div', 'seats');
+      [['To site', 'ذهاب للموقع', d.to, 0, pt], ['Return', 'عودة', d.back, 1, pf]].forEach(([en, a, time, i, on]) => {
+        const s = el('button', 'seat' + (on ? ' on' : '')); s.type = 'button'; s.disabled = d.locked;
+        s.setAttribute('aria-pressed', on ? 'true' : 'false');
+        s.innerHTML = SEAT_SVG; const tx = el('div', 'tx'); tx.appendChild(el('b', '', (i ? '🌇 ' : '🌅 ') + en)); tx.appendChild(el('small', '', (time || '') + '  ·  ' + a));
+        s.appendChild(tx); s.appendChild(el('span', 'tag', 'BOOKED ✓'));
+        s.onclick = () => { const [t0, f0] = parts(bpicks[d.date]); bpicks[d.date] = i ? join(t0, !f0) : join(!t0, f0); drawBus(); actionBar(); };
+        seats.appendChild(s);
+      });
+      card.appendChild(seats);
+      const foot = el('div', 'bfoot');
+      const nr = el('button', 'norides' + (bpicks[d.date] === 'NONE' ? ' on' : ''), bpicks[d.date] === 'NONE' ? '🚫 Not riding this day · مش راكب' : '🚫 I don’t need the bus this day'); nr.type = 'button'; nr.disabled = d.locked;
+      nr.onclick = () => { bpicks[d.date] = 'NONE'; drawBus(); actionBar(); };
+      foot.appendChild(nr);
+      const booked = Math.max(0, d.toCount - st + pt), total = d.seats || 0;
+      const occ = el('div', 'occ');
+      if (total) { const g = el('i'); for (let k = 0; k < Math.min(total, 56); k++) { const q = el('span', k < booked ? (pt && k === booked - 1 ? 'me' : 'f') : ''); g.appendChild(q); } occ.appendChild(g); }
+      occ.appendChild(document.createTextNode(booked + (total ? ' / ' + total : '') + ' to site'));
+      foot.appendChild(occ); card.appendChild(foot);
+      box.appendChild(card);
+    });
+  }
+  function busChanges() { const c = {}; (bus ? bus.days : []).forEach(d => { if (!d.locked && bpicks[d.date] && bpicks[d.date] !== bsaved[d.date]) c[d.date] = bpicks[d.date]; }); return c; }
+  async function saveBus() {
+    const ch = busChanges(); if (!Object.keys(ch).length) return;
+    const b = $('actBtn'); b.disabled = true; b.textContent = 'Saving…';
+    try {
+      const r = await api('saveBus', { choices: ch }); await loadBus();
+      if (r.skipped.length) say('Saved ' + r.saved + ' day(s). Closed days did not change: ' + r.skipped.join(', '), 'warn');
+      else say('Seats booked for ' + r.saved + ' day(s) ✓ تم الحجز', 'ok');
     } catch (e) { say(e.message); }
     actionBar();
   }
@@ -899,7 +1138,7 @@
 
   /* ---------------- admin console ---------------- */
   let AD = null, aTab = 'housing', hFilter = 'open', mDay = -1;
-  const PANES = [['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel']];
+  const PANES = [['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['bus', '🚌 Bus'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel']];
   function toast(t) { const d = el('div', 'toast', t); document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
   const pill = (t, cls) => el('span', 'pill ' + (cls || ''), t);
   const stCls = s => /Completed|Issued|Approved/.test(s) ? 'green' : /Progress|Assigned|Query|Hold/.test(s) ? 'amber' : /Cancelled|Rejected|Not Available/.test(s) ? 'grey' : '';
@@ -913,9 +1152,25 @@
     catch (e) { toast('⚠️ ' + e.message); }
   }
   $('aRefresh').onclick = () => loadAdmin();
+  $('aMail').onclick = async () => {
+    const b = $('aMail'), box = $('aMailOut'); b.disabled = true; b.textContent = 'Sending…'; box.innerHTML = '';
+    try {
+      const r = await api('adminTestMail');
+      const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '✉️ Test e-mails — sent from ' + r.sender + (r.quota !== '' ? ' · ' + r.quota + ' left today' : '')));
+      r.lists.forEach(l => { const ln = el('div', 'meta'); ln.style.padding = '5px 0';
+        ln.textContent = (/^Sent/.test(l.result) ? '✅ ' : /^Empty/.test(l.result) ? '➖ ' : '⚠️ ') + l.list + (l.to ? ' → ' + l.to : '') + ' — ' + l.result; c.appendChild(ln); });
+      c.appendChild(el('div', 'meta', 'Not in the inbox? Check Junk / Spam (Outlook) and mark it "Not junk". Every e-mail is listed in the "E-mail Log" tab.'));
+      const x = el('button', 'btn small line', 'Close'); x.type = 'button'; x.style.width = 'auto'; x.onclick = () => box.innerHTML = ''; c.appendChild(x);
+      box.appendChild(c);
+    } catch (e) { toast('⚠️ ' + e.message); }
+    b.disabled = false; b.textContent = '✉️ Test e-mails';
+  };
+  let adFetch = null;
+  function prefetchAdmin() { adFetch = api('adminData').then(d => (AD = d)).catch(() => null).finally(() => { adFetch = null; }); return adFetch; }
   async function loadAdmin(quiet) {
-    if (!quiet) $('aUpdated').textContent = 'Loading…';
-    try { AD = await api('adminData'); } catch (e) { $('aUpdated').textContent = ''; return say(e.message); }
+    if (AD && !quiet) { $('aUpdated').textContent = 'Updated ' + AD.generated + ' · refreshing…'; drawKpis(); drawSegs(); drawPane(); quiet = true; }
+    else if (!quiet) $('aUpdated').textContent = 'Loading…';
+    try { AD = adFetch ? (await adFetch) || await api('adminData') : await api('adminData'); } catch (e) { $('aUpdated').textContent = ''; return say(e.message); }
     $('aUpdated').textContent = 'Updated ' + AD.generated;
     drawKpis(); drawSegs(); drawPane();
   }
@@ -927,6 +1182,7 @@
     };
     card('housing', '#B45309', k.housingOpen, 'Open housing', k.emergencies ? k.emergencies + ' emergency · ' + k.overdue + ' over 72 h' : k.overdue + ' over 72 h', k.emergencies > 0);
     card('meals', '#0F766E', k.mealTotal, 'Meals ' + (k.mealDate || ''), k.mealMissing + ' not chosen yet');
+    if (AD.bus && AD.bus.length) card('bus', '#6D28D9', k.busTo, 'Bus ' + (k.busDate || ''), k.busMissing + ' not booked yet');
     card('supplies', '#2456AD', k.supplyLines, 'Supply lines to issue', k.supplyRequests + ' request(s)');
     card('transport', '#7C3AED', k.transportNew, 'Trips to approve', k.transportWeek + ' approved this week', k.transportNew > 0);
     card('fuel', '#475569', k.fuelEgp.toLocaleString('en') + ' EGP', 'Fuel this month', k.fuelFlagged + ' flagged · ' + k.fuelPending + ' to check', k.fuelFlagged > 0);
@@ -942,7 +1198,7 @@
   }
   function drawPane() {
     const box = $('aPanes'); box.innerHTML = '';
-    ({ housing: paneHousing, meals: paneMeals, supplies: paneSupplies, transport: paneTransport, fuel: paneFuel })[aTab](box);
+    ({ bus: paneBus, housing: paneHousing, meals: paneMeals, supplies: paneSupplies, transport: paneTransport, fuel: paneFuel })[aTab](box);
   }
   function bars(rows, color, onClick) {
     const max = Math.max(1, ...rows.map(r => r[1])), w = el('div', 'bars');
@@ -992,16 +1248,20 @@
     if (!AD.meals.length) return box.appendChild(el('div', 'empty', 'No menu for the coming days. Paste it in the Menu Entry tab.'));
     if (mDay < 0 || mDay >= AD.meals.length) { const t = new Date(); const today = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
       mDay = Math.max(0, AD.meals.findIndex(d => d.date > today)); }
+    const TYPES = AD.lists.choices.filter(c => c.key !== 'NONE');
+    const total = d => TYPES.reduce((a, c) => a + d.counts[c.key], 0);
+    const short = { MAIN: 'Main', ALT: 'Alt', INDIAN: 'Ind', DIET: 'Diet', SANDWICH: 'Sand' };
     const chips = el('div', 'daychips');
     AD.meals.forEach((d, i) => {
-      const tot = d.counts.MAIN + d.counts.ALT + d.counts.INDIAN + d.counts.DIET + d.counts.SANDWICH;
-      const b = el('button', i === mDay ? 'on' : ''); b.type = 'button'; b.appendChild(document.createTextNode(d.label)); b.appendChild(el('b', '', String(tot)));
+      const b = el('button', i === mDay ? 'on' : ''); b.type = 'button';
+      b.appendChild(document.createTextNode(d.label)); b.appendChild(el('b', '', String(total(d))));
+      b.appendChild(el('small', '', TYPES.filter(c => d.counts[c.key]).map(c => short[c.key] + ' ' + d.counts[c.key]).join(' · ') || '—'));
+      b.appendChild(el('i', '', d.locked ? '🔒 Final' : '⏳ Open'));
       b.onclick = () => { mDay = i; drawPane(); }; chips.appendChild(b);
     });
     box.appendChild(chips);
     const d = AD.meals[mDay], c = el('div', 'card');
-    const tot = d.counts.MAIN + d.counts.ALT + d.counts.INDIAN + d.counts.DIET + d.counts.SANDWICH;
-    const bn = el('div', 'bignum'); bn.appendChild(el('b', '', String(tot))); bn.appendChild(el('span', '', 'meals · ' + d.dayAr + ' ' + d.label)); c.appendChild(bn);
+    const bn = el('div', 'bignum'); bn.appendChild(el('b', '', String(total(d)))); bn.appendChild(el('span', '', 'meals · ' + d.dayAr + ' ' + d.label + (d.locked ? ' · 🔒 final' : ' · ⏳ still open'))); c.appendChild(bn);
     const mm = el('div', 'meta'); mm.appendChild(document.createTextNode('Main: ')); mm.appendChild(ar(d.main)); mm.lastChild.style.display = 'inline';
     if (d.alt) { mm.appendChild(document.createTextNode('   ·   Alternative: ')); mm.appendChild(ar(d.alt)); mm.lastChild.style.display = 'inline'; }
     c.appendChild(mm);
@@ -1012,19 +1272,114 @@
     two.appendChild(bars(rows, '#0F766E'));
     const names = el('div');
     rows.forEach(r => {
-      const list = r[3] === 'MISSING' ? d.missing : d.groups[r[3]];
+      const list = r[3] === 'MISSING' ? d.missing : (d.groupsAr || d.groups)[r[3]];
       if (!list.length) return;
       const det = el('details', 'grp'); det.appendChild(el('summary', '', r[0] + ' (' + list.length + ')'));
-      const n = el('div', 'names'); list.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); names.appendChild(det);
+      const n = el('div', 'names'); list.forEach(x => { const q = el('div', '', x); if (r[3] !== 'MISSING') { q.dir = 'rtl'; q.className = 'ar'; } n.appendChild(q); }); det.appendChild(n); names.appendChild(det);
     });
     two.appendChild(names); c.appendChild(two);
+
+    // guests / visitors (no user account)
+    const gw = el('div'); gw.style.cssText = 'margin-top:16px;border-top:1px solid var(--line);padding-top:12px';
+    gw.appendChild(el('div', 'meta', '👥 Guests & visitors · وجبات الزوار' + (d.guestTotal ? ' — ' + d.guestTotal : '')));
+    (d.guests || []).forEach(g => {
+      const row = el('div'); row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line)';
+      const t = el('div', '', ''); t.style.flex = '1';
+      const nm = el('span', 'ar', g.name); nm.dir = 'auto'; t.appendChild(nm);
+      t.appendChild(document.createTextNode('  ·  ' + (AD.lists.choices.find(x => x.key === g.key) || {}).en + ' × ' + g.qty + (g.host ? '  ·  host: ' + g.host : '')));
+      const x = el('button', 'btn small line', '✕'); x.type = 'button'; x.style.width = 'auto'; x.title = 'Remove';
+      x.onclick = async () => { x.disabled = true; try { await api('adminGuest', { remove: g.id }); toast('✓ Removed'); await loadAdmin(true); } catch (e) { toast('⚠️ ' + e.message); x.disabled = false; } };
+      row.appendChild(t); row.appendChild(x); gw.appendChild(row);
+    });
+    const gf = el('div'); gf.style.cssText = 'display:grid;grid-template-columns:1fr 80px;gap:8px;margin-top:10px';
+    const gName = el('input'); gName.placeholder = 'Guest name or company · اسم الزائر'; gName.maxLength = 80;
+    const gQty = el('input'); gQty.type = 'number'; gQty.min = 1; gQty.max = 500; gQty.value = 1; gQty.inputMode = 'numeric';
+    const gType = el('select'); TYPES.forEach(t => { if (t.key === 'ALT' && !d.alt) return; gType.appendChild(new Option(t.en + ' · ' + t.ar, t.key)); });
+    const gHost = el('input'); gHost.placeholder = 'Host (optional) · المضيف'; gHost.maxLength = 80;
+    [gName, gQty, gType, gHost].forEach(i => { i.style.cssText = 'width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff'; });
+    gf.appendChild(gName); gf.appendChild(gQty); gf.appendChild(gType); gf.appendChild(gHost);
+    gw.appendChild(gf);
+    const ga = el('button', 'btn small', '+ Add guest meal'); ga.type = 'button'; ga.style.cssText = 'width:auto;margin-top:8px';
+    ga.onclick = async () => {
+      if (!gName.value.trim()) { toast('⚠️ Write the guest name'); gName.focus(); return; }
+      ga.disabled = true;
+      try { await api('adminGuest', { date: d.date, choice: gType.value, qty: gQty.value, guest: gName.value, host: gHost.value }); toast('✓ Added — counted in kitchen & buffet'); await loadAdmin(true); }
+      catch (e) { toast('⚠️ ' + e.message); ga.disabled = false; }
+    };
+    gw.appendChild(ga); c.appendChild(gw);
+
+    // ready-to-send texts
+    const kitchenText = 'طلب وجبات SAFfly — يوم ' + d.dayAr + ' ' + d.dateText + '\n\n' +
+      TYPES.map(t => t.ar + ': ' + d.counts[t.key]).join('\n') + '\n\nإجمالي الوجبات: ' + total(d) + (d.guestTotal ? ' (منها ' + d.guestTotal + ' للزوار)' : '');
+    const buffetText = 'توزيع وجبات يوم ' + d.dayAr + ' ' + d.dateText + ' — إجمالي ' + total(d) + '\n' +
+      TYPES.filter(t => d.counts[t.key]).map(t => '\n*' + t.ar + ' (' + d.counts[t.key] + ')*\n' + d.groupsAr[t.key].map((x, i) => (i + 1) + '. ' + x).join('\n')).join('\n');
+    const copy = async (text, what) => {
+      try { await navigator.clipboard.writeText(text); toast('✓ ' + what + ' copied — paste it in WhatsApp'); }
+      catch (e) { const t = el('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); toast('✓ Copied'); } catch (x) { toast('⚠️ Could not copy'); } t.remove(); }
+    };
+    const pre = el('div', 'ar'); pre.dir = 'rtl';
+    kitchenText.split('\n').forEach(line => { const q = el('div', '', line || '\u00a0'); q.dir = 'rtl'; q.style.cssText = 'unicode-bidi:isolate;text-align:right'; pre.appendChild(q); });
+    pre.style.cssText = 'background:#F6F8FB;border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin:6px 0 0;font-size:15px;text-align:right';
+    c.appendChild(el('div', 'meta', 'Message for the kitchen · رسالة المطبخ')); c.lastChild.style.marginTop = '16px'; c.appendChild(pre);
     const br = el('div', 'btnrow');
-    [['kitchen', '✉️ Send counts to kitchen', AD.mail.kitchen], ['buffet', '✉️ Send names to buffet', AD.mail.buffet]].forEach(([kind, t, okMail]) => {
-      const b = el('button', 'btn small' + (okMail ? '' : ' line'), t + (okMail ? '' : ' (add e-mail in Settings)')); b.type = 'button'; b.disabled = !okMail;
+    const mk = (t, cls, fn) => { const b = el('button', 'btn small' + (cls ? ' ' + cls : ''), t); b.type = 'button'; b.onclick = fn; br.appendChild(b); return b; };
+    mk('📋 Copy kitchen message', '', () => copy(kitchenText, 'Kitchen message'));
+    mk('💬 WhatsApp', 'line', () => window.open('https://wa.me/?text=' + encodeURIComponent(kitchenText), '_blank', 'noopener'));
+    mk('📋 Copy buffet list (Arabic names)', 'line', () => copy(buffetText, 'Buffet list'));
+    if (d.missing.length && !d.locked) mk('🔔 Copy reminder for not-chosen (' + d.missing.length + ')', 'line', () => copy(
+      'تذكير: برجاء اختيار وجبة يوم ' + d.dayAr + ' ' + d.dateText + ' من تطبيق SAFfly Crew قبل معاد القفل 🙏\n\n' + (d.missingAr || d.missing).map(x => '• ' + x).join('\n'), 'Reminder'));
+    [['kitchen', '✉️ E-mail counts to kitchen', AD.mail.kitchen], ['buffet', '✉️ E-mail names to buffet', AD.mail.buffet]].forEach(([kind, t, okMail]) => {
+      const b = mk(t + (okMail ? '' : ' (add e-mail in Settings)'), 'line', null); b.disabled = !okMail;
       b.onclick = async () => { b.disabled = true; try { const r = await api('adminSend', { kind: kind, date: d.date }); toast('✓ Sent — ' + r.sent + ' meals'); } catch (e) { toast('⚠️ ' + e.message); } b.disabled = false; };
-      br.appendChild(b);
     });
     c.appendChild(br); box.appendChild(c);
+  }
+
+
+  let bDay = -1;
+  function paneBus(box) {
+    if (!AD.bus || !AD.bus.length) return box.appendChild(el('div', 'empty', 'No buses yet. Fill the Buses tab, then choose each person’s bus in Users → Bus.'));
+    if (bDay < 0 || bDay >= AD.bus.length) { const t = new Date(), today = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+      bDay = Math.max(0, AD.bus.findIndex(d => d.date > today)); }
+    const chips = el('div', 'daychips');
+    AD.bus.forEach((d, i) => {
+      const to = d.buses.reduce((a, b) => a + b.toSite.length, 0), miss = d.buses.reduce((a, b) => a + b.missing.length, 0);
+      const b = el('button', i === bDay ? 'on' : ''); b.type = 'button'; b.appendChild(document.createTextNode(d.label)); b.appendChild(el('b', '', String(to)));
+      b.appendChild(el('small', '', d.buses.length + ' bus' + (d.buses.length > 1 ? 'es' : '') + (miss ? ' · ' + miss + ' ?' : ''))); b.appendChild(el('i', '', d.locked ? '🔒 Final' : '⏳ Open'));
+      b.onclick = () => { bDay = i; drawPane(); }; chips.appendChild(b);
+    });
+    box.appendChild(chips);
+    const d = AD.bus[bDay];
+    const copy = async (text, what) => { try { await navigator.clipboard.writeText(text); toast('✓ ' + what + ' copied'); } catch (e) { toast('⚠️ Could not copy'); } };
+    const wa = (num, text) => { const n = String(num || '').replace(/\D/g, '').replace(/^0/, '20'); window.open('https://wa.me/' + (n.length >= 11 ? n : '') + '?text=' + encodeURIComponent(text), '_blank', 'noopener'); };
+    d.buses.forEach(b => {
+      const c = el('div', 'card'), top = el('div', 'top'), l = el('div');
+      l.appendChild(el('div', 'ttl', '🚌 ' + b.bus + (b.merged.length ? '  + ' + b.merged.join(', ') : '') + (b.plate ? '  ·  ' + b.plate : '')));
+      l.appendChild(el('div', 'meta', d.dayAr + ' ' + d.label + ' · to site ' + b.to + ' · return ' + b.back + (b.driver ? ' · driver ' + b.driver : '')));
+      top.appendChild(l); top.appendChild(pill(b.toSite.length + (b.seats ? ' / ' + b.seats : '') + ' seats', b.seats && b.toSite.length > b.seats ? 'red' : 'green')); c.appendChild(top);
+      const two = el('div', 'twocol'); two.style.marginTop = '10px';
+      [['🌅 To site · ذهاب ' + b.to, b.toSite], ['🌇 Return · عودة ' + b.back, b.ret]].forEach(([t, list]) => {
+        const col = el('div'); col.appendChild(el('div', 'meta', t + ' — ' + list.length)); const rl = el('div', 'rlist');
+        list.forEach(x => { const r = el('div'); const tx = el('span'); const n = el('span', 'ar', x.ar); n.dir = 'rtl'; tx.appendChild(n); tx.appendChild(el('small', '', x.pickup + (x.mobile ? ' · ' + x.mobile : ''))); r.appendChild(tx); rl.appendChild(r); });
+        if (!list.length) rl.appendChild(el('span', 'meta', '—')); col.appendChild(rl); two.appendChild(col);
+      });
+      c.appendChild(two);
+      if (b.missing.length) { const det = el('details', 'grp'); det.appendChild(el('summary', '', '❔ Not booked yet (' + b.missing.length + ')')); const n = el('div', 'names'); b.missing.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); c.appendChild(det); }
+      if (b.none.length) { const det = el('details', 'grp'); det.appendChild(el('summary', '', '🚫 Not riding (' + b.none.length + ')')); const n = el('div', 'names'); b.none.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); c.appendChild(det); }
+      const lines = list => list.map((x, i) => (i + 1) + '. ' + x.ar + ' — ' + x.pickup + (x.mobile ? ' — ' + x.mobile : '')).join('\n');
+      const text = '🚌 ' + b.bus + ' — ' + d.dayAr + ' ' + d.dateText + (b.plate ? ' — ' + b.plate : '') +
+        '\n\n🌅 الذهاب للموقع ' + b.to + ' (' + b.toSite.length + '):\n' + (lines(b.toSite) || '—') +
+        '\n\n🌇 العودة ' + b.back + ' (' + b.ret.length + '):\n' + (lines(b.ret) || '—');
+      const br = el('div', 'btnrow');
+      const mk = (t, cls, fn) => { const x = el('button', 'btn small' + (cls ? ' ' + cls : ''), t); x.type = 'button'; x.onclick = fn; br.appendChild(x); return x; };
+      mk('📋 Copy list', '', () => copy(text, 'Bus list'));
+      mk('💬 WhatsApp driver', 'line', () => wa(b.driverMobile, text));
+      if (b.missing.length && !d.locked) mk('🔔 Copy reminder (' + b.missing.length + ')', 'line', () => copy('تذكير: برجاء حجز باص يوم ' + d.dayAr + ' ' + d.dateText + ' من تطبيق SAFfly Crew 🚌\n\n' + b.missingAr.map(x => '• ' + x).join('\n'), 'Reminder'));
+      c.appendChild(br); box.appendChild(c);
+    });
+    const sb = el('button', 'btn small line', '✉️ E-mail all bus lists for ' + d.label); sb.type = 'button'; sb.style.width = 'auto';
+    sb.onclick = async () => { sb.disabled = true; try { const r = await api('adminSend', { kind: 'bus', date: d.date }); toast('✓ Sent — ' + r.sent + ' to site'); } catch (e) { toast('⚠️ ' + e.message); } sb.disabled = false; };
+    box.appendChild(sb);
   }
 
   function paneSupplies(box) {
@@ -1077,6 +1432,17 @@
       } else {
         br.appendChild(sel(AD.lists.transStatus, t.status, v => update('transport', t.id, { Status: v }, '✓ ' + t.id + ' → ' + v)));
       }
+      if (t.status === 'Approved') {
+        const wa = (num, text) => { const n = String(num || '').replace(/\D/g, '').replace(/^0/, '20');
+          window.open('https://wa.me/' + (n.length >= 11 ? n : '') + '?text=' + encodeURIComponent(text), '_blank', 'noopener'); };
+        const trip = 'رحلة عمل ' + t.id + '\nالموعد: ' + t.date + '\nمن: ' + t.from + '\nإلى: ' + t.to + (t.round ? '\nالعودة: ' + t.back : '\nذهاب فقط') + '\nعدد الأفراد: ' + t.pax;
+        if (t.driver) { const b1 = el('button', 'btn small', '💬 Send to driver'); b1.type = 'button';
+          b1.onclick = () => wa(AD.lists.driverMobiles[t.driver], 'أهلًا ' + t.driver.split(' ')[0] + '، عندك ' + trip + '\nالموظف: ' + t.name + ' (' + t.dept + ')' + (t.mobile ? ' — ' + t.mobile : '') + (t.plate ? '\nالعربية: ' + t.plate : '') + '\n\nالتفاصيل في التطبيق ← My trips');
+          br.appendChild(b1); }
+        const b2 = el('button', 'btn small line', '💬 Tell employee'); b2.type = 'button';
+        b2.onclick = () => wa(t.mobile, 'أهلًا ' + t.name.split(' ')[0] + '، تمت الموافقة على طلب الانتقال ✅\n' + trip + (t.driver ? '\nالسائق: ' + t.driver + (AD.lists.driverMobiles[t.driver] ? ' — ' + AD.lists.driverMobiles[t.driver] : '') : '') + (t.plate ? '\nالعربية: ' + t.plate : ''));
+        br.appendChild(b2);
+      }
       c.appendChild(br); box.appendChild(c);
     });
   }
@@ -1114,12 +1480,16 @@
       const n = Object.keys(mealChanges()).length; setSum(n, n === 1 ? 'change' : 'changes');
       btn.textContent = 'Save meals'; btn.disabled = !n; btn.onclick = saveMeals; bar.hidden = false;
     }
+    if (view === 'bus' && bus && bus.days.some(d => !d.locked)) {
+      const n = Object.keys(busChanges()).length; setSum(n, n === 1 ? 'change' : 'changes');
+      btn.textContent = 'Confirm booking'; btn.disabled = !n; btn.onclick = saveBus; bar.hidden = false;
+    }
     if (view === 'supplies' && catalog) {
       const n = cartLines().length + others().length; setSum(n, n === 1 ? 'item' : 'items');
       btn.textContent = 'Review request'; btn.disabled = !n; btn.onclick = review; bar.hidden = false;
     }
   }
-  const dirty = () => Object.keys(mealChanges()).length || cartLines().length;
+  const dirty = () => Object.keys(mealChanges()).length || Object.keys(busChanges()).length || cartLines().length;
   window.addEventListener('beforeunload', e => { if (auth && dirty()) { e.preventDefault(); e.returnValue = ''; } });
 </script>
 </body>
