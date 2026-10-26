@@ -92,6 +92,7 @@
   .bday { border: 1.5px solid var(--line); border-radius: 18px; margin-bottom: 12px; background: #fff; overflow: hidden; }
   .bday .dayh { background: #F4F1FE; }
   .bday.shut { opacity: .78; } .bday.shut .dayh { background: #EEF1F6; }
+  .bday.extra { border-color: #C4B5FD; } .bday.extra .dayh { background: #EDE7FE; }
   .seats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 14px 4px; }
   .seat { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; border: 2px solid var(--line); border-radius: 16px; padding: 14px 8px 12px; background: #fff; cursor: pointer; text-align: center; font: inherit; color: inherit; transition: border-color .15s, background .15s, transform .1s; }
   .seat:active { transform: scale(.98); }
@@ -112,9 +113,69 @@
   .occ i span { width: 7px; height: 7px; border-radius: 2px; background: #E3E8F0; }
   .occ i span.f { background: #A78BFA; } .occ i span.me { background: var(--amber); }
   .merged { font-size: 12px; color: #6D28D9; font-weight: 700; }
+  .offnote { margin: 10px 14px 0; padding: 9px 12px; border-radius: 12px; background: #FFF4DC; color: #7A4B05; font-size: 13px; font-weight: 600; }
+  .busmaps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 14px 14px; }
+  .busmap { border: 1.5px solid var(--line); border-radius: 14px; padding: 8px 10px 10px; background: #FAFBFE; }
+  .bm-t { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: 12px; color: var(--slate); margin-bottom: 6px; }
+  .bm-t b { font-family: var(--cond); font-size: 16px; color: var(--ink); } .bm-t b.over { color: #B91C1C; }
+  .bm-body { border: 2px solid #C9D3E3; border-radius: 18px 18px 10px 10px; padding: 6px 8px 8px; background: #fff; }
+  .bm-front { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px dashed #D8E0EC; padding-bottom: 5px; margin-bottom: 6px; }
+  .bm-front .wheel { width: 15px; height: 15px; border-radius: 50%; border: 3px solid #94A3B8; }
+  .bm-front .door { font-size: 9px; color: #94A3B8; text-transform: uppercase; letter-spacing: .08em; }
+  .bm-seats { display: grid; gap: 5px; }
+  .bm-row { display: grid; grid-template-columns: 1fr 1fr .6fr 1fr; gap: 5px; } .bm-row.back { grid-template-columns: repeat(4, 1fr); }
+  .bm-row .aisle { display: block; }
+  .bs { display: block; height: 16px; border-radius: 5px 5px 3px 3px; background: #E3E8F0; border: 1px solid #CBD5E1; }
+  .bs.taken { background: #A78BFA; border-color: #7C3AED; } .bs.me { background: var(--amber); border-color: var(--amber-d); box-shadow: 0 0 0 2px rgba(232,163,61,.35); }
+  .bm-over { margin-top: 5px; font-size: 11px; color: #B91C1C; font-weight: 700; }
+
   .rlist { counter-reset: r; } .rlist div { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
   .rlist div::before { counter-increment: r; content: counter(r); width: 22px; height: 22px; flex: none; border-radius: 50%; background: #EDE7FE; color: #6D28D9; font-size: 12px; font-weight: 800; display: grid; place-items: center; }
   .rlist small { color: var(--slate); display: block; unicode-bidi: plaintext; }
+
+
+  /* ================= CONTROL ROOM — SETTINGS & REPORTS ================= */
+  .snav { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
+  .snav button { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 8px 13px; font-weight: 700; font-size: 13.5px; cursor: pointer; color: var(--ink); }
+  .snav button.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px 14px; margin-top: 10px; }
+  .sf label.f { font-size: 13px; margin-bottom: 4px; } .sf input, .sf select, .sf textarea, .dwrap input { padding: 9px 11px; font-size: 15px; }
+  .sh { display: block; color: var(--slate); font-size: 12px; margin-top: 4px; line-height: 1.45; text-align: right; }
+  .ssec { margin: 16px 0 0; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); border-bottom: 1.5px solid var(--sky); padding-bottom: 4px; }
+  .sbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; } .sbar input { flex: 1; min-width: 200px; }
+  .card.editor { border-color: var(--blue); box-shadow: 0 8px 24px rgba(36,86,173,.12); }
+  .card.danger { border-color: #F3C4C4; }
+  .plist { padding: 6px 8px; } .prow { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; border: 0; border-bottom: 1px solid var(--line); background: none; padding: 9px 6px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+  .prow:hover { background: #F6F8FC; } .prow.off { opacity: .55; }
+  .pn b { display: block; } .pn small { color: var(--slate); font-size: 12.5px; }
+  .ptags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; } .ptags i { font-style: normal; font-size: 11.5px; background: var(--sky); color: var(--blue-d); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .dpick { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 6px 0; } .dpick label { display: flex; align-items: center; gap: 4px; font-size: 14px; } .dpick input { width: auto; }
+  .bcard { display: block; width: 100%; text-align: left; cursor: pointer; font: inherit; color: inherit; border: 1.5px solid var(--line); } .bcard:hover { border-color: var(--blue); }
+  .mwrap { overflow-x: auto; margin-top: 12px; }
+  .mgrid { direction: rtl; display: grid; grid-template-columns: 80px repeat(6, minmax(130px, 1fr)); gap: 6px; min-width: 860px; }
+  .mgrid .mh { font-weight: 800; text-align: center; background: var(--night); color: #fff; border-radius: 8px; padding: 6px; font-family: var(--ar); }
+  .mgrid .mh:first-child { background: none; }
+  .mgrid .mr { font-weight: 700; font-family: var(--ar); display: flex; align-items: center; justify-content: flex-start; color: var(--slate); }
+  .mgrid textarea { font-family: var(--ar); font-size: 14px; padding: 7px 8px; resize: vertical; min-height: 52px; }
+  .utable { display: grid; grid-template-columns: 1.2fr 1fr .9fr .6fr .6fr .6fr auto; gap: 6px 8px; align-items: center; min-width: 760px; }
+  .utable.u { grid-template-columns: 1.1fr .9fr .9fr .55fr .55fr 1.6fr .55fr auto; min-width: 980px; }
+  .utable.v { grid-template-columns: 1fr 1.2fr .8fr 1.2fr .6fr .6fr auto; }
+  .utable b { font-size: 12px; color: var(--slate); text-transform: uppercase; letter-spacing: .05em; }
+  .utable input, .utable select { padding: 7px 9px; font-size: 14px; }
+  .report .rhead h3 { font-family: var(--cond); font-size: 28px; margin: 4px 0 2px; }
+  .rtab { width: 100%; border-collapse: collapse; font-size: 14px; } .rtab th { text-align: left; background: #F1F4F9; color: var(--slate); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .rtab th, .rtab td { padding: 7px 9px; border-bottom: 1px solid var(--line); }
+  .rsec { break-inside: avoid; }
+  .bigmap { height: 520px; border-radius: 14px; margin-top: 10px; overflow: hidden; background: #EEF2F8; }
+  .upin span { display: inline-block; transform: translate(-50%, -100%); color: #fff; font: 700 12px/1 Barlow, Arial, sans-serif; padding: 5px 7px; border-radius: 8px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+  .upin { background: none; border: 0; }
+  .ugrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+  .ucard.over { border-color: #F3C4C4; } .umap { width: 100%; height: 170px; border: 0; border-radius: 12px; margin-top: 10px; background: #EEF2F8; }
+  .rlist a.tel { margin-left: auto; font-size: 13px; color: var(--blue); text-decoration: none; white-space: nowrap; }
+  @media print {
+    body { background: #fff; } .bar-top, #aSegs, #aKpis, #aMailOut, .updated, .noprint, .head, #action, #demoBar, .toast { display: none !important; }
+    .card { border: 1px solid #DDE3EC; box-shadow: none; } .kpis { grid-template-columns: repeat(3, 1fr); } body.wide #app { max-width: none !important; padding: 0; }
+  }
 
   /* ================= FORM CONTROLS ================= */
   label.f { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
@@ -144,6 +205,7 @@
   .view { padding: 4px 16px 0; }
   .hello { font-family: var(--cond); font-size: 34px; font-weight: 700; line-height: 1.05; margin: 12px 0 4px; }
   .sub { color: var(--slate); margin: 0 0 20px; }
+  .mycode { display: block; font-family: var(--ui); font-size: 14px; font-weight: 600; color: var(--blue); letter-spacing: .02em; margin-top: 6px; }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .tile { text-align: left; border: 0; background: #fff; border-radius: 18px; padding: 16px; cursor: pointer; min-height: 132px;
           display: flex; flex-direction: column; justify-content: space-between; gap: 10px; box-shadow: 0 1px 0 var(--line); }
@@ -376,7 +438,7 @@
         <small class="pwhint" id="pwHint" hidden>First time: the last 5 digits of your national ID · آخر ٥ أرقام من الرقم القومي</small>
       </div>
       <button class="btn" id="loginBtn" type="submit">Sign in</button>
-      <p class="fine">First time? Your password is your staff code. <span class="ar">كلمة المرور هي الكود الوظيفي</span></p>
+      <p class="fine" id="loginFine">First time? Your password is your staff code. <span class="ar">كلمة المرور هي الكود الوظيفي</span></p>
     </div>
   </form>
 </section>
@@ -561,7 +623,7 @@
   <section class="view" id="v-admin" hidden>
     <div class="head"><button class="back" type="button" aria-label="Back">←</button><div><h2>Control room</h2><span class="ar">لوحة التحكم</span></div></div>
     <div class="msg"></div>
-    <div class="updated" style="margin:-6px 0 12px"><span id="aUpdated">Loading…</span><button type="button" id="aRefresh">↻ Refresh</button><button type="button" id="aMail">✉️ Test e-mails</button></div>
+    <div class="updated" style="margin:-6px 0 12px"><span id="aUpdated">Loading…</span><button type="button" id="aRefresh">↻ Refresh</button><button type="button" id="aMail">✉️ Test e-mails</button><button type="button" id="aDaily">📰 Send daily report now</button></div>
     <div id="aMailOut"></div>
     <div class="kpis" id="aKpis"></div>
     <div class="segs" id="aSegs"></div>
@@ -656,7 +718,8 @@
   api('getNames').then(r => {
     loginMode = r.mode; applyBrand(r.brand);
     if (r.mode === 'Mobile') { $('byName').hidden = true; $('byMobile').hidden = false; $('mobile').value = recall('hub_mobile') || '';
-      $('password').placeholder = '5 digits'; $('pwHint').hidden = false; return; }
+      $('password').placeholder = '5 digits'; $('pwHint').hidden = true;
+      $('loginFine').innerHTML = 'Password: the last 5 digits of your national ID. You can change it after you sign in. <span class="ar">كلمة المرور: آخر خمسة أرقام من الرقم القومي، ويمكنك تغييرها بعد الدخول</span>'; return; }
     const s = $('name'); s.innerHTML = ''; s.appendChild(new Option('Choose your name', ''));
     r.names.forEach(n => s.appendChild(new Option(n, n)));
     const last = recall('hub_name'); if (last && r.names.includes(last)) s.value = last;
@@ -673,6 +736,7 @@
       await takeoff();
       $('login').hidden = true; $('app').hidden = false; buildHome(); go('home');
       if (me.modules.admin) prefetchAdmin();
+      if (me.modules.admin && /^#(map|units)$/.test(location.hash)) { aTab = 'units'; uView = location.hash === '#map' ? 'map' : 'cards'; go('admin'); }
     } catch (err) { say(err.message, 'bad', $('loginMsg')); }
     b.disabled = false; b.textContent = 'Sign in';
   });
@@ -688,6 +752,7 @@
   function buildHome() {
     const h = new Date().getHours(), first = me.name.split(' ')[0];
     $('hello').textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', ' + first;
+    $('hello').appendChild(el('span', 'mycode', me.code + (me.dept ? ' · ' + me.dept : '')));
     const t = $('tiles'); t.innerHTML = '';
     const add = (id, icon, title, arText, sub, cls) => {
       const b = el('button', 'tile ' + (cls || '')); b.type = 'button'; b.onclick = () => go(id);
@@ -702,7 +767,7 @@
     if (m.housing) add('housing', '🏠', 'Housing', 'صيانة ونظافة السكن', me.unit + ' · ' + me.resort);
     if (m.fuel) add('fuel', '⛽', 'Fuel entry', 'تسجيل البنزين', 'Odometer, amount, photos', 'fuel');
     if (m.trips) add('trips', '🗓️', 'My trips', 'رحلاتي', 'Trips assigned to you', 'trans');
-    if (m.transport) add('transport', '🚐', 'Transport', 'طلب انتقال', 'Work trips · 48 h notice', 'trans');
+    if (m.transport) add('transport', '🚐', 'Transport', 'طلب انتقال', 'Work trips · ' + (me.transportHours || 48) + ' h notice', 'trans');
     if (me.payroll && me.role !== 'Resident') add('salary', '💰', 'My salary', 'مرتبي', 'Private · PIN from HR');
     add('mine', '📋', 'My requests', 'طلباتي', 'Status of everything you sent', 'wide');
     if (m.admin) add('admin', '🛰️', 'Control room', 'لوحة التحكم', 'Live numbers, approvals and reports', 'wide admin');
@@ -792,6 +857,7 @@
       t.appendChild(el('small', '', d.locked ? 'Closed for changes' : 'Open until ' + d.cutoff)); h.appendChild(t);
       h.appendChild(el('span', 'chip ' + (d.locked ? 'shut' : 'open'), d.locked ? 'Closed' : 'Open'));
       card.appendChild(h);
+      if (d.off) card.appendChild(el('div', 'offnote', 'Saturday off for Group ' + meals.group + ' — set as day off. Working this Saturday? Choose a meal. · السبت إجازة لمجموعتك — إذا كنت في العمل اختر وجبتك'));
       const opts = el('div', 'opts');
       meals.choices.forEach(c => {
         if (c.key === 'ALT' && !d.alt) return;
@@ -830,61 +896,85 @@
   async function loadBus() {
     $('busBox').innerHTML = '<div class="loading">Loading…</div>';
     try { bus = await api('getBus'); } catch (e) { $('busBox').innerHTML = ''; return say(e.message); }
-    bpicks = {}; bsaved = {}; bus.days.forEach(d => { if (d.choice) bpicks[d.date] = bsaved[d.date] = d.choice; });
+    bpicks = {}; bsaved = {}; bus.days.forEach(d => { if (d.choice) bpicks[d.key] = bsaved[d.key] = d.choice; });
     drawBus(); actionBar();
   }
   function drawBus() {
     const box = $('busBox'); box.innerHTML = '';
     const b = bus.bus, t = el('div', 'ticket');
-    t.appendChild(el('div', 'lab', 'Your bus · باصك'));
-    t.appendChild(el('div', 'bn', '🚌 ' + b.name)); if (b.route) t.appendChild(el('div', 'rt', b.route + (b.plate ? '  ·  ' + b.plate : '')));
-    const r3 = el('div', 'row3');
-    [['To site · ذهاب', b.to || '—', ''], ['Return · عودة', b.back || '—', ''], ['Pickup · الركوب', bus.pickup, 'pk']].forEach(([l, v, c]) => { const d = el('div', c); d.appendChild(el('span', 'lab', l)); d.appendChild(el('b', '', v)); r3.appendChild(d); });
-    t.appendChild(r3); box.appendChild(t);
+    if (b) {
+      t.appendChild(el('div', 'lab', 'Your bus · باصك'));
+      t.appendChild(el('div', 'bn', '🚌 ' + b.name)); if (b.route) t.appendChild(el('div', 'rt', b.route + (b.plate ? '  ·  ' + b.plate : '')));
+      const r3 = el('div', 'row3');
+      [['To site · ذهاب', b.to || '—', ''], ['Return · عودة', b.back || '—', ''], ['Pickup · الركوب', bus.pickup, 'pk']].forEach(([l, v, c]) => { const d = el('div', c); d.appendChild(el('span', 'lab', l)); d.appendChild(el('b', '', v)); r3.appendChild(d); });
+      t.appendChild(r3);
+    } else { t.appendChild(el('div', 'lab', 'Bus booking · حجز الباص')); t.appendChild(el('div', 'bn', '🚌 Open trips')); t.appendChild(el('div', 'rt', 'Buses open to all employees on certain days · رحلات متاحة لجميع الموظفين')); }
+    box.appendChild(t);
     if (!bus.days.length) return box.appendChild(el('div', 'empty', 'No bus days in the coming week.'));
-    const open = bus.days.filter(d => !d.locked);
+    const open = bus.days.filter(d => !d.locked && !d.extra);
     if (open.length > 1) {
       const bl = el('div', 'bulk');
-      [['💺 Both ways every day', 'BOTH'], ['🌅 To site only', 'TO'], ['🚫 Not riding this week', 'NONE']].forEach(([lbl, k]) => {
-        const x = el('button', '', lbl); x.type = 'button'; x.onclick = () => { open.forEach(d => bpicks[d.date] = k); drawBus(); actionBar(); }; bl.appendChild(x); });
+      [['💺 Both ways every day', 'BOTH'], ['🌅 To site only', 'TO'], ['Not needed this week', 'NONE']].forEach(([lbl, k]) => {
+        const x = el('button', '', lbl); x.type = 'button'; x.onclick = () => { open.forEach(d => bpicks[d.key] = k); drawBus(); actionBar(); }; bl.appendChild(x); });
       box.appendChild(bl);
     }
     bus.days.forEach(d => {
       const card = el('div', 'bday' + (d.locked ? ' shut' : ''));
       const h = el('div', 'dayh'), tt = el('div'); tt.appendChild(el('b', '', d.label));
       tt.appendChild(el('small', '', d.locked ? 'Closed for changes' : 'Book until ' + d.cutoff));
-      if (d.merged) tt.appendChild(el('span', 'merged', 'Today you ride with ' + d.bus + ' · النهارده مع ' + d.bus));
+      if (d.merged) tt.appendChild(el('span', 'merged', 'Today you ride with ' + d.bus + ' · اليوم مع باص ' + d.bus));
+      if (d.extra) { card.classList.add('extra'); tt.appendChild(el('span', 'merged', '🏙️ ' + d.bus + ' bus' + (d.route ? ' · ' + d.route : '') + ' — open to all employees today · متاح لجميع الموظفين')); }
       h.appendChild(tt); h.appendChild(el('span', 'chip ' + (d.locked ? 'shut' : 'open'), d.locked ? 'Closed' : 'Open'));
       card.appendChild(h);
       if (d.locked) {   // closed day: one compact line
-        const lbl = { BOTH: '💺 Both ways · ذهاب وعودة', TO: '🌅 To site only · ذهاب فقط', FROM: '🌇 Return only · عودة فقط', NONE: '🚫 Not riding · مش راكب' }[bsaved[d.date]] || '— Not booked · لم يتم الحجز';
+        const lbl = { BOTH: '💺 Both ways · ذهاب وعودة', TO: '🌅 To site only · ذهاب فقط', FROM: '🌇 Return only · عودة فقط', NONE: 'Bus not needed · لا أحتاج الباص' }[bsaved[d.key]] || '— Not booked · لم يتم الحجز';
         const f = el('div', 'bfoot'); f.appendChild(el('span', '', lbl)); f.appendChild(el('span', 'occ', d.toCount + (d.seats ? ' / ' + d.seats : '') + ' to site')); card.appendChild(f);
         return box.appendChild(card);
       }
-      const [pt, pf] = parts(bpicks[d.date]), [st, sf] = parts(bsaved[d.date]);
+      const [pt, pf] = parts(bpicks[d.key]), [st, sf] = parts(bsaved[d.key]);
       const seats = el('div', 'seats');
       [['To site', 'ذهاب للموقع', d.to, 0, pt], ['Return', 'عودة', d.back, 1, pf]].forEach(([en, a, time, i, on]) => {
         const s = el('button', 'seat' + (on ? ' on' : '')); s.type = 'button'; s.disabled = d.locked;
         s.setAttribute('aria-pressed', on ? 'true' : 'false');
         s.innerHTML = SEAT_SVG; const tx = el('div', 'tx'); tx.appendChild(el('b', '', (i ? '🌇 ' : '🌅 ') + en)); tx.appendChild(el('small', '', (time || '') + '  ·  ' + a));
         s.appendChild(tx); s.appendChild(el('span', 'tag', 'BOOKED ✓'));
-        s.onclick = () => { const [t0, f0] = parts(bpicks[d.date]); bpicks[d.date] = i ? join(t0, !f0) : join(!t0, f0); drawBus(); actionBar(); };
+        s.onclick = () => { const [t0, f0] = parts(bpicks[d.key]); bpicks[d.key] = i ? join(t0, !f0) : join(!t0, f0); drawBus(); actionBar(); };
         seats.appendChild(s);
       });
       card.appendChild(seats);
       const foot = el('div', 'bfoot');
-      const nr = el('button', 'norides' + (bpicks[d.date] === 'NONE' ? ' on' : ''), bpicks[d.date] === 'NONE' ? '🚫 Not riding this day · مش راكب' : '🚫 I don’t need the bus this day'); nr.type = 'button'; nr.disabled = d.locked;
-      nr.onclick = () => { bpicks[d.date] = 'NONE'; drawBus(); actionBar(); };
+      const nr = el('button', 'norides' + (bpicks[d.key] === 'NONE' ? ' on' : ''), bpicks[d.key] === 'NONE' ? '✓ Bus not needed this day · لا أحتاج الباص' : 'I don’t need the bus this day · لا أحتاج الباص'); nr.type = 'button'; nr.disabled = d.locked;
+      nr.onclick = () => { bpicks[d.key] = 'NONE'; drawBus(); actionBar(); };
       foot.appendChild(nr);
-      const booked = Math.max(0, d.toCount - st + pt), total = d.seats || 0;
-      const occ = el('div', 'occ');
-      if (total) { const g = el('i'); for (let k = 0; k < Math.min(total, 56); k++) { const q = el('span', k < booked ? (pt && k === booked - 1 ? 'me' : 'f') : ''); g.appendChild(q); } occ.appendChild(g); }
-      occ.appendChild(document.createTextNode(booked + (total ? ' / ' + total : '') + ' to site'));
-      foot.appendChild(occ); card.appendChild(foot);
+      card.appendChild(foot);
+      if (d.off) { const o = el('div', 'offnote', 'Saturday off for Group ' + bus.group + '. Working this Saturday? Book your seat. · السبت إجازة لمجموعتك — إذا كنت في العمل احجز مقعدك'); card.insertBefore(o, seats); }
+      const maps = el('div', 'busmaps');
+      maps.appendChild(busMap('🌅 To site · ذهاب', Math.max(0, d.toCount - st + pt), pt, d.seats));
+      maps.appendChild(busMap('🌇 Return · عودة', Math.max(0, d.backCount - sf + pf), pf, d.seats));
+      card.appendChild(maps);
       box.appendChild(card);
     });
   }
-  function busChanges() { const c = {}; (bus ? bus.days : []).forEach(d => { if (!d.locked && bpicks[d.date] && bpicks[d.date] !== bsaved[d.date]) c[d.date] = bpicks[d.date]; }); return c; }
+  /** A small bus: driver at the front, rows of 2 + aisle + 1. Booked seats in purple, yours in amber. */
+  function busMap(title, booked, mine, seats) {
+    seats = seats || 11;
+    const w = el('div', 'busmap'), top = el('div', 'bm-t'); top.appendChild(el('span', '', title));
+    top.appendChild(el('b', booked > seats ? 'over' : '', booked + ' / ' + seats)); w.appendChild(top);
+    const body = el('div', 'bm-body'), front = el('div', 'bm-front'); front.appendChild(el('span', 'wheel', '')); front.appendChild(el('span', 'door', 'door')); body.appendChild(front);
+    const grid = el('div', 'bm-seats'); let n = 0;
+    while (n < seats) {
+      const left = seats - n, back = left === 4, cols = back ? [1, 1, 1, 1] : left <= 2 ? [1, 1] : [1, 1, 0, 1];
+      const row = el('div', 'bm-row' + (back ? ' back' : ''));
+      cols.forEach(c => { if (!c) { row.appendChild(el('span', 'aisle')); return; }
+        if (n >= seats) return; const k = n++; const st = k < booked ? (mine && k === booked - 1 ? 'me' : 'taken') : 'free';
+        const seat = el('span', 'bs ' + st); seat.title = st === 'me' ? 'Your seat' : st === 'taken' ? 'Booked' : 'Free'; row.appendChild(seat); });
+      grid.appendChild(row);
+    }
+    body.appendChild(grid); w.appendChild(body);
+    if (booked > seats) w.appendChild(el('div', 'bm-over', '+' + (booked - seats) + ' over capacity'));
+    return w;
+  }
+  function busChanges() { const c = {}; (bus ? bus.days : []).forEach(d => { if (!d.locked && bpicks[d.key] && bpicks[d.key] !== bsaved[d.key]) c[d.key] = bpicks[d.key]; }); return c; }
   async function saveBus() {
     const ch = busChanges(); if (!Object.keys(ch).length) return;
     const b = $('actBtn'); b.disabled = true; b.textContent = 'Saving…';
@@ -1138,7 +1228,7 @@
 
   /* ---------------- admin console ---------------- */
   let AD = null, aTab = 'housing', hFilter = 'open', mDay = -1;
-  const PANES = [['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['bus', '🚌 Bus'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel']];
+  const PANES = [['settings', '⚙️ Settings'], ['reports', '📊 Reports'], ['units', '🏘️ Units'], ['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['bus', '🚌 Bus'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel']];
   function toast(t) { const d = el('div', 'toast', t); document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
   const pill = (t, cls) => el('span', 'pill ' + (cls || ''), t);
   const stCls = s => /Completed|Issued|Approved/.test(s) ? 'green' : /Progress|Assigned|Query|Hold/.test(s) ? 'amber' : /Cancelled|Rejected|Not Available/.test(s) ? 'grey' : '';
@@ -1152,6 +1242,7 @@
     catch (e) { toast('⚠️ ' + e.message); }
   }
   $('aRefresh').onclick = () => loadAdmin();
+  $('aDaily').onclick = async () => { const b = $('aDaily'); b.disabled = true; try { const r = await api('adminSend', { kind: 'daily' }); toast('✓ Daily report sent' + (r.sent ? ' — ' + r.sent + ' item(s) to follow up' : '')); } catch (e) { toast('⚠️ ' + e.message); } b.disabled = false; };
   $('aMail').onclick = async () => {
     const b = $('aMail'), box = $('aMailOut'); b.disabled = true; b.textContent = 'Sending…'; box.innerHTML = '';
     try {
@@ -1198,7 +1289,7 @@
   }
   function drawPane() {
     const box = $('aPanes'); box.innerHTML = '';
-    ({ bus: paneBus, housing: paneHousing, meals: paneMeals, supplies: paneSupplies, transport: paneTransport, fuel: paneFuel })[aTab](box);
+    ({ settings: paneSettings, reports: paneReports, units: paneUnits, bus: paneBus, housing: paneHousing, meals: paneMeals, supplies: paneSupplies, transport: paneTransport, fuel: paneFuel })[aTab](box);
   }
   function bars(rows, color, onClick) {
     const max = Math.max(1, ...rows.map(r => r[1])), w = el('div', 'bars');
@@ -1268,7 +1359,7 @@
     const two = el('div', 'twocol'); two.style.marginTop = '14px';
     const colors = { MAIN: '#0F766E', ALT: '#14B8A6', INDIAN: '#E8A33D', DIET: '#65A30D', SANDWICH: '#2456AD', NONE: '#94A3B8' };
     const rows = AD.lists.choices.map(ch => [ch.en + ' · ' + ch.ar, d.counts[ch.key], colors[ch.key], ch.key]);
-    rows.push(['Not chosen · لم يختار', d.missing.length, '#DC2626', 'MISSING']);
+    rows.push(['Not chosen · لم يختر', d.missing.length, '#DC2626', 'MISSING']);
     two.appendChild(bars(rows, '#0F766E'));
     const names = el('div');
     rows.forEach(r => {
@@ -1365,7 +1456,7 @@
       });
       c.appendChild(two);
       if (b.missing.length) { const det = el('details', 'grp'); det.appendChild(el('summary', '', '❔ Not booked yet (' + b.missing.length + ')')); const n = el('div', 'names'); b.missing.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); c.appendChild(det); }
-      if (b.none.length) { const det = el('details', 'grp'); det.appendChild(el('summary', '', '🚫 Not riding (' + b.none.length + ')')); const n = el('div', 'names'); b.none.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); c.appendChild(det); }
+      if (b.none.length) { const det = el('details', 'grp'); det.appendChild(el('summary', '', 'Not needed (' + b.none.length + ')')); const n = el('div', 'names'); b.none.forEach(x => n.appendChild(el('div', '', x))); det.appendChild(n); c.appendChild(det); }
       const lines = list => list.map((x, i) => (i + 1) + '. ' + x.ar + ' — ' + x.pickup + (x.mobile ? ' — ' + x.mobile : '')).join('\n');
       const text = '🚌 ' + b.bus + ' — ' + d.dayAr + ' ' + d.dateText + (b.plate ? ' — ' + b.plate : '') +
         '\n\n🌅 الذهاب للموقع ' + b.to + ' (' + b.toSite.length + '):\n' + (lines(b.toSite) || '—') +
@@ -1380,6 +1471,497 @@
     const sb = el('button', 'btn small line', '✉️ E-mail all bus lists for ' + d.label); sb.type = 'button'; sb.style.width = 'auto';
     sb.onclick = async () => { sb.disabled = true; try { const r = await api('adminSend', { kind: 'bus', date: d.date }); toast('✓ Sent — ' + r.sent + ' to site'); } catch (e) { toast('⚠️ ' + e.message); } sb.disabled = false; };
     box.appendChild(sb);
+  }
+
+
+
+  /* =================== CONTROL ROOM → UNITS (chalets on the map) =================== */
+  let uResort = '', uSearch = '', uView = 'cards';
+  const coordsOf = link => { const s = String(link || ''); const m = s.match(/[?&](?:q|query|ll)=(-?\d{1,2}\.\d+),\s*(-?\d{1,3}\.\d+)/) || s.match(/@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/) || s.match(/!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/); return m ? [m[1], m[2]] : null; };
+  async function paneUnits(box) {
+    if (!CF) { box.appendChild(el('div', 'loading', 'Loading units…')); try { await loadConfig(); } catch (e) { box.innerHTML = ''; return say(e.message); } box.innerHTML = ''; }
+    const active = CF.users.filter(u => String(u.Active).toLowerCase() !== 'no');
+    const units = CF.units.map(u => {
+      const res = active.filter(x => x.Unit === u.Unit), beds = Number(u.Beds) || 0;
+      const open = (AD && AD.housing || []).filter(h => h.unit === u.Unit && !/Completed|Cancelled/.test(h.status)).length;
+      return Object.assign({}, u, { residents: res, beds: beds, free: beds ? beds - res.length : null, open: open, coords: coordsOf(u.Location) });
+    });
+    const resorts = Array.from(new Set(units.map(u => u.Resort).filter(Boolean))).sort();
+    // summary
+    const k = el('div', 'kpis');
+    const tile = (t, n, s, c) => { const b = el('div', 'kpi'); b.style.setProperty('--c', c); b.appendChild(el('span', 't', t)); b.appendChild(el('span', 'n', String(n))); b.appendChild(el('span', 's', s)); k.appendChild(b); };
+    const bedsT = units.reduce((a, u) => a + u.beds, 0), occ = units.reduce((a, u) => a + u.residents.length, 0);
+    tile('Units', units.length, resorts.length + ' resorts', '#B45309');
+    tile('Capacity', bedsT || '—', bedsT ? occ + ' occupied · ' + Math.max(0, bedsT - occ) + ' free' : 'Add beds in Settings → Units', '#0F766E');
+    tile('Over capacity', units.filter(u => u.free != null && u.free < 0).length, 'units with more residents than beds', '#DC2626');
+    tile('On the map', units.filter(u => u.Location).length + ' / ' + units.length, 'units with a location link', '#2456AD');
+    box.appendChild(k);
+    const vt = el('div', 'snav');
+    [['cards', '▦ Cards'], ['map', '🗺️ Map of all units']].forEach(([id, lab]) => { const b = el('button', uView === id ? 'on' : '', lab); b.type = 'button'; b.onclick = () => { uView = id; drawPane(); }; vt.appendChild(b); });
+    const kml = el('button', '', '⬇️ Google My Maps file (KML)'); kml.type = 'button'; kml.onclick = () => downloadKml(units); vt.appendChild(kml);
+    box.appendChild(vt);
+    if (uView === 'map') return unitsMap(box, units);
+    const bar = el('div', 'sbar'); const q = mkIn(uSearch, 'search', 'Search unit, resident, mobile…'); q.oninput = () => { uSearch = q.value; draw(); };
+    const rs = mkSel(resorts, uResort, 'All resorts'); rs.style.maxWidth = '220px'; rs.onchange = () => { uResort = rs.value; draw(); };
+    bar.appendChild(q); bar.appendChild(rs); box.appendChild(bar);
+    const list = el('div', 'ugrid'); box.appendChild(list);
+    function draw() {
+      list.innerHTML = ''; const t = uSearch.trim().toLowerCase();
+      units.filter(u => (!uResort || u.Resort === uResort) && (!t || [u.Unit, u.Resort, ...u.residents.map(r => r.Name + ' ' + r['Name (Arabic)'] + ' ' + r.Mobile)].join(' ').toLowerCase().includes(t)))
+        .sort((a, b) => (Number(a['Pickup Order']) || 999) - (Number(b['Pickup Order']) || 999) || String(a.Unit).localeCompare(String(b.Unit)))
+        .forEach(u => {
+          const c = el('div', 'card ucard' + (u.free != null && u.free < 0 ? ' over' : ''));
+          const top = el('div', 'top'), l = el('div');
+          l.appendChild(el('div', 'ttl', '🏠 ' + u.Unit)); l.appendChild(el('div', 'meta', [u.Resort, u.Type, u['Pickup Order'] ? 'bus stop #' + u['Pickup Order'] : ''].filter(Boolean).join(' · ')));
+          top.appendChild(l);
+          top.appendChild(pill(u.beds ? u.residents.length + ' / ' + u.beds + ' beds' : u.residents.length + (u.residents.length === 1 ? ' resident' : ' residents'), u.free != null && u.free < 0 ? 'red' : u.free === 0 ? 'amber' : 'green'));
+          c.appendChild(top);
+          if (u.coords) { const f = el('iframe', 'umap'); f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade'; f.title = 'Map of ' + u.Unit;
+            f.src = 'https://maps.google.com/maps?q=' + u.coords[0] + ',' + u.coords[1] + '&z=16&output=embed'; c.appendChild(f); }
+          const rl = el('div', 'rlist'); rl.style.marginTop = '8px';
+          u.residents.forEach(r => { const row = el('div'); const tx = el('span'); tx.appendChild(document.createTextNode(r.Name)); tx.appendChild(el('small', '', [r['Name (Arabic)'], r.code, r.Department].filter(Boolean).join(' · ')));
+            row.appendChild(tx); if (r.Mobile) { const a = el('a', 'tel', '📞 ' + r.Mobile); a.href = 'tel:' + r.Mobile; row.appendChild(a); } rl.appendChild(row); });
+          if (!u.residents.length) rl.appendChild(el('span', 'meta', 'No residents'));
+          c.appendChild(rl);
+          const br = el('div', 'btnrow');
+          if (u.Location) { const a = el('a', 'btn small', '📍 Open in Google Maps'); a.href = u.Location; a.target = '_blank'; a.rel = 'noopener'; br.appendChild(a);
+            const sh2 = el('button', 'btn small line', '📋 Copy location'); sh2.type = 'button'; sh2.onclick = async () => { try { await navigator.clipboard.writeText(u.Unit + (u.Resort ? ' · ' + u.Resort : '') + '\n' + u.Location); toast('✓ Location copied'); } catch (e) { toast('⚠️ Could not copy'); } }; br.appendChild(sh2); }
+          else br.appendChild(el('span', 'meta', 'No location yet — add the map link in Settings → Units'));
+          if (u.open) { const h = el('button', 'btn small line', '🛠️ ' + u.open + ' open request' + (u.open > 1 ? 's' : '')); h.type = 'button'; h.onclick = () => { aTab = 'housing'; drawSegs(); drawPane(); }; br.appendChild(h); }
+          c.appendChild(br); list.appendChild(c);
+        });
+    }
+    draw();
+  }
+
+
+  /** All units on one map (OpenStreetMap), each pin labelled with its number. */
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve();
+    return new Promise((ok, bad) => {
+      const c = document.createElement('link'); c.rel = 'stylesheet'; c.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(c);
+      const j = document.createElement('script'); j.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; j.onload = ok; j.onerror = () => bad(new Error('The map could not load. Check the internet connection.')); document.head.appendChild(j);
+    });
+  }
+  async function unitsMap(box, units) {
+    const on = units.filter(u => u.coords), off = units.filter(u => !u.coords);
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🗺️ ' + on.length + ' of ' + units.length + ' units on the map'));
+    const m = el('div', 'bigmap'); c.appendChild(m); box.appendChild(c);
+    if (off.length) { const n = el('div', 'card'); n.appendChild(el('div', 'ttl', 'Not on the map yet (' + off.length + ')'));
+      n.appendChild(el('div', 'meta', off.map(u => u.Unit + (u.Location ? ' (short link — send the full link or coordinates)' : '')).join(' · ')));
+      n.appendChild(el('div', 'meta', 'Add the location in Settings → Units → Map link (coordinates like 29.6123, 32.3012 or a full Google Maps link).')); box.appendChild(n); }
+    if (!on.length) { m.appendChild(el('div', 'empty', 'No unit has coordinates yet.')); return; }
+    try { await loadLeaflet(); } catch (e) { m.appendChild(el('div', 'empty', e.message)); return; }
+    const map = L.map(m, { scrollWheelZoom: true });
+    const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+    const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Imagery © Esri' });
+    L.control.layers({ 'Map': street, 'Satellite': sat }).addTo(map);
+    const pts = [];
+    on.forEach(u => {
+      const ll = [Number(u.coords[0]), Number(u.coords[1])]; pts.push(ll);
+      const color = u.free != null && u.free < 0 ? '#DC2626' : '#0E2A5C';
+      const icon = L.divIcon({ className: 'upin', html: '<span style="background:' + color + '">' + String(u.Unit).replace(/^(Chalet|Villa)\s*/i, '').replace(/[<>&]/g, '') + '</span>', iconSize: null });
+      const who = u.residents.map(r => r.Name + (r.Mobile ? ' · ' + r.Mobile : '')).join('<br>') || 'No residents';
+      L.marker(ll, { icon: icon }).addTo(map).bindPopup('<b>' + u.Unit + '</b>' + (u.Resort ? ' · ' + u.Resort : '') + '<br>' + (u.beds ? u.residents.length + ' / ' + u.beds + ' beds' : u.residents.length + ' resident(s)') +
+        '<hr style="border:0;border-top:1px solid #ddd">' + who + '<br><a href="' + u.Location + '" target="_blank" rel="noopener">Open in Google Maps</a>');
+    });
+    if (pts.length === 1) map.setView(pts[0], 16); else map.fitBounds(pts, { padding: [30, 30] });
+    setTimeout(() => map.invalidateSize(), 200);
+  }
+  function downloadKml(units) {
+    const x = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const pm = units.filter(u => u.coords).map(u => '<Placemark><name>' + x(u.Unit) + '</name><description>' + x([u.Resort, u.Type, u.beds ? u.beds + ' beds' : '', u.residents.length + ' residents'].filter(Boolean).join(' · ')) +
+      '</description><Point><coordinates>' + u.coords[1] + ',' + u.coords[0] + ',0</coordinates></Point></Placemark>').join('');
+    if (!pm) return toast('No unit has coordinates yet');
+    const kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>SAFfly units</name>' + pm + '</Document></kml>';
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' })); a.download = 'SAFfly units.kml'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    toast('✓ Downloaded — import it in Google My Maps');
+  }
+
+  /* =================== CONTROL ROOM → SETTINGS (everything Admin manages) =================== */
+  let CF = null, sTab = 'general', pSearch = '', pEdit = null, bEdit = null, cEdit = null;
+  const S_TABS = [['general', '🔐 General'], ['admins', '🛡️ Admins'], ['people', '👥 People'], ['menu', '🍽️ Menu & meals'], ['buses', '🚌 Buses'],
+    ['units', '🏠 Units & housing'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport & fuel'], ['data', '🗂️ Data']];
+  const SECTIONS = { general: ['🔐', '✉️', '💰'], menu: ['🍽️', '🗓️'], buses: ['🚌'], units: ['🏠'], supplies: ['📎'], transport: ['🚐', '⛽'] };
+  const WEEK = [['Sat', 'السبت'], ['Sun', 'الأحد'], ['Mon', 'الاثنين'], ['Tue', 'الثلاثاء'], ['Wed', 'الأربعاء'], ['Thu', 'الخميس'], ['Fri', 'الجمعة']];
+  async function loadConfig(force) { if (!CF || force) CF = await api('adminConfig'); return CF; }
+  const mkIn = (v, type, ph) => { const i = el('input'); i.type = type || 'text'; i.value = v == null ? '' : v; if (ph) i.placeholder = ph; return i; };
+  const mkSel = (opts, v, blank) => { const s = el('select'); if (blank != null) s.appendChild(new Option(blank, ''));
+    opts.forEach(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; s.appendChild(new Option(lab, val)); }); s.value = v == null ? '' : String(v); return s; };
+  const yn = v => mkSel([['Yes', 'Yes'], ['No', 'No']], String(v || 'No').toLowerCase() === 'yes' ? 'Yes' : 'No');
+  const fieldBox = (label, input, help) => { const w = el('div', 'sf'); const l = el('label', 'f', label); w.appendChild(l); w.appendChild(input); if (help) { const h = el('small', 'sh', help); h.dir = 'rtl'; w.appendChild(h); } return w; };
+  const grid2 = () => el('div', 'sgrid');
+  const saveBtn = (label, fn) => { const b = el('button', 'btn small', label || 'Save'); b.type = 'button';
+    b.onclick = async () => { b.disabled = true; const t = b.textContent; b.textContent = 'Saving…'; try { await fn(); } catch (e) { toast('⚠️ ' + e.message); } b.disabled = false; b.textContent = t; }; return b; };
+  const daysPick = (value) => { const set = new Set(String(value || '').split(/[,،;\s\/]+/).map(x => x.slice(0, 3).toLowerCase())); const w = el('div', 'dpick');
+    WEEK.forEach(([en, a]) => { const l = el('label'); const c = el('input'); c.type = 'checkbox'; c.value = en; c.checked = set.has(en.toLowerCase()); l.appendChild(c); l.appendChild(document.createTextNode(' ' + en)); w.appendChild(l); });
+    w.val = () => [...w.querySelectorAll('input:checked')].map(c => c.value).join(', '); return w; };
+
+  async function paneSettings(box) {
+    const nav = el('div', 'snav');
+    S_TABS.forEach(([id, label]) => { const b = el('button', id === sTab ? 'on' : '', label); b.type = 'button'; b.onclick = () => { sTab = id; drawPane(); }; nav.appendChild(b); });
+    box.appendChild(nav);
+    const body = el('div'); box.appendChild(body);
+    if (!CF) { body.appendChild(el('div', 'loading', 'Loading settings…')); try { await loadConfig(); } catch (e) { body.innerHTML = ''; return say(e.message); } body.innerHTML = ''; }
+    ({ general: setGeneral, admins: setAdmins, people: setPeople, menu: setMenu, buses: setBuses, units: setUnits, supplies: setSupplies, transport: setTransport, data: setData })[sTab](body);
+  }
+  const redraw = async () => { await loadConfig(true); drawPane(); };
+
+  /** A card with the Settings-tab rows of the given sections (same names and help as the sheet). */
+  function settingsCard(box, marks, title) {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', title || 'Settings'));
+    const inputs = {}; let sec = '';
+    const g = grid2();
+    CF.layout.forEach(r => {
+      if (r[0] === '§') { sec = r[1]; return; }
+      if (!marks.some(m => sec.indexOf(m) === 0)) return;
+      const [name, , help, type] = r, v = CF.settings[name];
+      let i;
+      if (type === 'yesno') i = yn(v);
+      else if (type === 'login') i = mkSel([['Mobile', 'Mobile number'], ['Name', 'Name list']], v);
+      else if (type === 'hour') { i = mkIn(v, 'number'); i.min = 0; i.max = 23; }
+      else if (type === 'num') { i = mkIn(v, 'number'); i.min = 0; }
+      else if (/\(date\)/.test(name)) i = mkIn(String(v || '').slice(0, 10), 'date');
+      else i = mkIn(v, type === 'emails' ? 'email' : 'text', type === 'emails' ? 'name@saffly.com, other@saffly.com' : '');
+      if (type === 'emails') i.multiple = true;
+      inputs[name] = i; g.appendChild(fieldBox(name, i, help));
+    });
+    c.appendChild(g);
+    const br = el('div', 'btnrow');
+    br.appendChild(saveBtn('Save settings', async () => {
+      const values = {}; Object.keys(inputs).forEach(k => { const v = inputs[k].value; if (String(v) !== String(CF.settings[k] == null ? '' : CF.settings[k])) values[k] = v; });
+      if (!Object.keys(values).length) return toast('Nothing changed');
+      await api('adminSave', { kind: 'settings', values: values }); toast('✓ Saved'); await loadConfig(true);
+      if ('App name' in values || /Sign-in|Home/.test(Object.keys(values).join())) api('getNames').then(r => applyBrand(r.brand)).catch(() => {});
+    }));
+    c.appendChild(br); box.appendChild(c);
+  }
+
+  function setGeneral(box) {
+    const intro = el('div', 'card'); intro.appendChild(el('div', 'ttl', 'App name, sign-in page, e-mail and login'));
+    intro.appendChild(el('div', 'meta', 'Changes apply to the app straight away. E-mails are sent from the Google account that owns the system, under the app name, and replies go to the Admin e-mail.'));
+    box.appendChild(intro);
+    settingsCard(box, SECTIONS.general);
+  }
+
+  function setAdmins(box) {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🛡️ Who can open the Control room'));
+    c.appendChild(el('div', 'meta', 'Admins see everything you see here and can approve requests and change settings. They do not need access to the sheet.'));
+    const admins = CF.users.filter(u => String(u['Control Room']).toLowerCase() === 'yes');
+    const list = el('div', 'rlist'); list.style.marginTop = '10px';
+    admins.forEach(u => { const r = el('div'); const t = el('span'); t.appendChild(document.createTextNode(u.Name + ' · ' + u.code)); t.appendChild(el('small', '', u.Department + (u.Mobile ? ' · ' + u.Mobile : ''))); r.appendChild(t);
+      if (u.code !== me.code) { const x = el('button', 'btn small line', 'Remove'); x.type = 'button'; x.style.marginLeft = 'auto';
+        x.onclick = async () => { if (!confirm('Remove Control room access for ' + u.Name + '?')) return; try { await api('adminSave', { kind: 'user', code: u.code, fields: { 'Control Room': 'No' } }); toast('✓ Removed'); redraw(); } catch (e) { toast('⚠️ ' + e.message); } }; r.appendChild(x); }
+      list.appendChild(r); });
+    c.appendChild(list);
+    const add = mkSel(CF.users.filter(u => String(u['Control Room']).toLowerCase() !== 'yes' && String(u.Active).toLowerCase() !== 'no').map(u => [u.code, u.Name + ' · ' + u.code]), '', 'Choose a person…');
+    const br = el('div', 'btnrow'); br.appendChild(add); add.style.maxWidth = '360px';
+    br.appendChild(saveBtn('+ Make admin', async () => { if (!add.value) return toast('Choose a person'); await api('adminSave', { kind: 'user', code: add.value, fields: { 'Control Room': 'Yes' } }); toast('✓ Admin added'); redraw(); }));
+    c.appendChild(br); box.appendChild(c);
+  }
+
+  /* ---------- People ---------- */
+  const USER_FORM = [
+    ['Basic', [['Name', 'text'], ['Name (Arabic)', 'text'], ['Department', 'dept'], ['Title', 'text'], ['Location', 'text'], ['Company', 'text'], ['Role', 'role'], ['Active', 'yn']]],
+    ['Sign-in', [['Mobile', 'tel'], ['Password', 'text'], ['Email', 'email'], ['Control Room', 'yn']]],
+    ['Services', [['Meals', 'yn'], ['Default Meal', 'meal'], ['Meal Options', 'mopt'], ['Sat-Off Group', 'grp'], ['Supplies', 'yn'], ['Transport', 'yn'], ['Unit', 'unit'], ['Bus', 'bus'], ['Bus Pickup', 'text']]],
+    ['Other', [['Notes', 'text']]]
+  ];
+  const HELP = { Password: 'Empty = the staff code. Employees can change it themselves; you always see it here.', 'Default Meal': 'Counted automatically every day unless the person chooses another meal.',
+    'Meal Options': 'Sandwich = this person can also choose the sandwich meal.', 'Sat-Off Group': 'A or B — Saturday off by rotation.', 'Bus Pickup': 'Optional pickup point (e.g. Cairo – Ring Road). Empty = his unit.' };
+  function userInput(type, v) {
+    if (type === 'yn') return yn(v);
+    if (type === 'role') return mkSel(CF.lists.roles, v || 'Employee');
+    if (type === 'meal') return mkSel(CF.lists.choices.filter(c => c.key !== 'NONE').map(c => c.label.split(' - ')[0]), v, '— none —');
+    if (type === 'mopt') return mkSel(['Sandwich'], v, '— standard —');
+    if (type === 'grp') return mkSel(['A', 'B'], v, '— none —');
+    if (type === 'unit') return mkSel(CF.units.map(u => [u.Unit, u.Unit + (u.Resort ? ' · ' + u.Resort : '')]), v, '— no unit —');
+    if (type === 'bus') return mkSel(CF.buses.map(b => b.Bus), v, '— no bus —');
+    if (type === 'dept') { const i = mkIn(v, 'text'); const id = 'dl' + Math.random().toString(36).slice(2); i.setAttribute('list', id);
+      const dl = el('datalist'); dl.id = id; CF.departments.forEach(d => dl.appendChild(new Option(d, d)));
+      const w = el('span', 'dwrap'); w.appendChild(i); w.appendChild(dl); Object.defineProperty(w, 'value', { get: () => i.value }); return w; }
+    return mkIn(v, type === 'tel' ? 'tel' : type === 'email' ? 'email' : 'text');
+  }
+  function setPeople(box) {
+    const bar = el('div', 'sbar'); const q = mkIn(pSearch, 'search', 'Search name, code, mobile, department…'); q.oninput = () => { pSearch = q.value; drawList(); };
+    bar.appendChild(q); const nb = el('button', 'btn small', '+ New employee'); nb.type = 'button'; nb.onclick = () => { pEdit = { create: true }; drawPane(); }; bar.appendChild(nb);
+    box.appendChild(bar);
+    if (pEdit) box.appendChild(userEditor(pEdit.create ? null : CF.users.find(u => u.code === pEdit.code)));
+    const list = el('div', 'card plist'); box.appendChild(list);
+    function drawList() {
+      list.innerHTML = ''; const t = pSearch.trim().toLowerCase();
+      const rows = CF.users.filter(u => !t || [u.code, u.Name, u['Name (Arabic)'], u.Mobile, u.Department, u.Unit, u.Bus].join(' ').toLowerCase().includes(t));
+      list.appendChild(el('div', 'meta', rows.length + ' of ' + CF.users.length + ' people'));
+      rows.forEach(u => {
+        const r = el('button', 'prow' + (String(u.Active).toLowerCase() === 'no' ? ' off' : '')); r.type = 'button';
+        const a = el('span', 'pn'); a.appendChild(el('b', '', u.Name)); a.appendChild(el('small', '', u.code + ' · ' + (u.Department || '—') + (u.Mobile ? ' · ' + u.Mobile : '')));
+        const tags = el('span', 'ptags');
+        [[u['Control Room'] === 'Yes', 'Admin'], [u.Meals === 'Yes', '🍽️'], [!!u.Bus, '🚌 ' + u.Bus], [!!u.Unit, '🏠 ' + u.Unit], [u.Role === 'Driver', 'Driver'], [String(u.Active).toLowerCase() === 'no', 'Inactive']]
+          .forEach(([on, t2]) => { if (on) tags.appendChild(el('i', '', t2)); });
+        r.appendChild(a); r.appendChild(tags); r.onclick = () => { pEdit = { code: u.code }; drawPane(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        list.appendChild(r);
+      });
+    }
+    drawList();
+  }
+  function userEditor(u) {
+    const c = el('div', 'card editor'); const create = !u;
+    c.appendChild(el('div', 'ttl', create ? '+ New employee' : '✏️ ' + u.Name + ' · ' + u.code));
+    const inputs = {}; let codeIn = null;
+    if (create) { const g = grid2(); codeIn = mkIn('', 'text', 'e.g. SF-058'); g.appendChild(fieldBox('User Code', codeIn, 'Unique staff code')); c.appendChild(g); }
+    USER_FORM.forEach(([sec, fields]) => {
+      c.appendChild(el('div', 'ssec', sec)); const g = grid2();
+      fields.forEach(([k, type]) => { const i = userInput(type, u ? u[k] : (k === 'Active' || k === 'Meals' || k === 'Supplies' || k === 'Transport' ? 'Yes' : k === 'Company' ? 'SAFfly' : '')); inputs[k] = i; g.appendChild(fieldBox(k, i, HELP[k])); });
+      c.appendChild(g);
+    });
+    const br = el('div', 'btnrow');
+    br.appendChild(saveBtn(create ? 'Add employee' : 'Save changes', async () => {
+      const fields = {}; Object.keys(inputs).forEach(k => { const v = inputs[k].value; if (create ? v !== '' : String(v) !== String(u[k] || '')) fields[k] = v; });
+      if (!create && !Object.keys(fields).length) return toast('Nothing changed');
+      await api('adminSave', { kind: 'user', create: create, code: create ? codeIn.value.trim().toUpperCase() : u.code, fields: fields });
+      toast('✓ Saved'); pEdit = null; redraw();
+    }));
+    const cl = el('button', 'btn small line', 'Close'); cl.type = 'button'; cl.onclick = () => { pEdit = null; drawPane(); }; br.appendChild(cl);
+    c.appendChild(br); return c;
+  }
+
+  /* ---------- Menu & meals ---------- */
+  function nextSaturday() { const d = new Date(); d.setHours(12); while (d.getDay() !== 6) d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10); }
+  function setMenu(box) {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🍽️ Weekly menu · Saturday to Thursday'));
+    c.appendChild(el('div', 'meta', 'Type or paste the menu as it arrives from the kitchen. Tip: copy the whole block from Excel and paste it into the first box.'));
+    const today = new Date().toISOString().slice(0, 10);
+    const isSat = v => new Date(v + 'T12:00:00').getDay() === 6;
+    const st = mkIn(CF.menu && CF.menu.start >= today && isSat(CF.menu.start) ? CF.menu.start : nextSaturday(), 'date');
+    const g = grid2(); g.appendChild(fieldBox('Week starts (Saturday)', st)); c.appendChild(g);
+    const rows = ['السكند', 'البريمو', 'خضار', 'السلاطة', 'البديل'];
+    const same = CF.menu && CF.menu.start === st.value;
+    const tbl = el('div', 'mgrid'); tbl.appendChild(el('span', 'mh', ''));
+    const heads = [];
+    for (let j = 0; j < 6; j++) { const h = el('span', 'mh'); heads.push(h); tbl.appendChild(h); }
+    const cells = rows.map((rn, i) => { tbl.appendChild(el('span', 'mr', rn)); return [0, 1, 2, 3, 4, 5].map(j => { const t = el('textarea'); t.rows = 2; t.dir = 'rtl'; t.value = same ? (CF.menu.grid[i] || [])[j] || '' : ''; tbl.appendChild(t); return t; }); });
+    const label = () => { const d0 = new Date(st.value + 'T12:00:00'); heads.forEach((h, j) => { const d = new Date(d0); d.setDate(d.getDate() + j); h.textContent = WEEK[j][1] + ' ' + String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0'); }); };
+    st.onchange = () => { if (!isSat(st.value)) toast('⚠️ Choose a Saturday — the week runs Saturday to Thursday'); label(); }; label();
+    cells.forEach((row, i) => row.forEach((t, j) => t.addEventListener('paste', e => {
+      const txt = (e.clipboardData || window.clipboardData).getData('text'); if (!/[\t\n]/.test(txt.trim())) return;
+      e.preventDefault(); txt.replace(/\r/g, '').split('\n').filter(l => l.length).forEach((line, a) => line.split('\t').forEach((v, b) => { const x = cells[i + a] && cells[i + a][j + b]; if (x) x.value = v.trim(); }));
+    })));
+    const wrap = el('div', 'mwrap'); wrap.appendChild(tbl); c.appendChild(wrap);
+    const br = el('div', 'btnrow');
+    br.appendChild(saveBtn('Save menu', async () => {
+      const r = await api('adminSave', { kind: 'menu', start: st.value, grid: cells.map(row => row.map(t => t.value)) });
+      toast('✓ Menu saved — ' + r.saved + ' day(s) open for choosing'); await loadConfig(true); AD = null; prefetchAdmin();
+    }));
+    const clr = el('button', 'btn small line', 'Clear'); clr.type = 'button'; clr.onclick = () => cells.forEach(r => r.forEach(t => t.value = '')); br.appendChild(clr);
+    c.appendChild(br); box.appendChild(c);
+
+    // set someone's meal
+    const m = el('div', 'card'); m.appendChild(el('div', 'ttl', '👤 Set a meal for a person'));
+    m.appendChild(el('div', 'meta', 'For people who do not use the app, or to correct a choice — allowed even after the cut-off.'));
+    const g2 = grid2();
+    const who = mkSel(CF.users.filter(u => u.Meals === 'Yes' && String(u.Active).toLowerCase() !== 'no').map(u => [u.code, u.Name + ' · ' + u.code]), '', 'Choose a person…');
+    const day = mkSel((AD && AD.meals || []).map(d => [d.date, d.label]), '', 'Choose the day…');
+    const meal = mkSel(CF.lists.choices.map(c => [c.key, c.label]), '', 'Choose the meal…');
+    g2.appendChild(fieldBox('Person', who)); g2.appendChild(fieldBox('Day', day)); g2.appendChild(fieldBox('Meal', meal)); m.appendChild(g2);
+    const b2 = el('div', 'btnrow'); b2.appendChild(saveBtn('Save meal', async () => {
+      if (!who.value || !day.value || !meal.value) return toast('Choose the person, day and meal');
+      await api('adminSave', { kind: 'meal', code: who.value, date: day.value, choice: meal.value }); toast('✓ Saved — counted in the kitchen and buffet reports'); prefetchAdmin();
+    })); m.appendChild(b2); box.appendChild(m);
+    settingsCard(box, SECTIONS.menu, 'Meal settings · Saturday groups');
+  }
+
+  /* ---------- Buses ---------- */
+  function setBuses(box) {
+    const top = el('div', 'sbar'); const nb = el('button', 'btn small', '+ New bus'); nb.type = 'button'; nb.onclick = () => { bEdit = { create: true }; drawPane(); }; top.appendChild(nb); box.appendChild(top);
+    if (bEdit) box.appendChild(busEditor(bEdit.create ? null : CF.buses.find(b => b.Bus === bEdit.key)));
+    CF.buses.forEach(b => {
+      const c = el('button', 'card bcard'); c.type = 'button';
+      const t = el('div', 'top'); const l = el('div'); l.appendChild(el('div', 'ttl', '🚌 ' + b.Bus + (String(b.Active).toLowerCase() === 'no' ? ' · inactive' : '')));
+      l.appendChild(el('div', 'meta', (b['Route / Area'] || '') + ' · ' + (b['Runs on'] || '—') + ' · to site ' + (b['To site at'] || '—') + ' · return ' + (b['Return at'] || '—') +
+        ' · ' + (b.Seats || '?') + ' seats' + (b['Open to all on'] ? ' · open to all on ' + b['Open to all on'] : '') + (b['Ride with (bus)'] ? ' · rides with ' + b['Ride with (bus)'] + ' on ' + (b['On these days'] || '—') : '')));
+      const riders = CF.users.filter(u => u.Bus === b.Bus).length;
+      t.appendChild(l); t.appendChild(pill(riders + ' people', 'green')); c.appendChild(t);
+      c.onclick = () => { bEdit = { key: b.Bus }; drawPane(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+      box.appendChild(c);
+    });
+    settingsCard(box, SECTIONS.buses, 'Booking settings');
+  }
+  function busEditor(b) {
+    const c = el('div', 'card editor'), create = !b; b = b || {};
+    c.appendChild(el('div', 'ttl', create ? '+ New bus' : '✏️ ' + b.Bus));
+    const g = grid2(), f = {};
+    const add = (k, i, h) => { f[k] = i; g.appendChild(fieldBox(k, i, h)); };
+    add('Bus', mkIn(b.Bus, 'text', 'e.g. Stella 3'));
+    add('Route / Area', mkIn(b['Route / Area'], 'text', 'e.g. Stella → Site'));
+    add('Runs on', daysPick(b['Runs on'] || 'Sat, Sun, Mon, Tue, Wed, Thu'));
+    add('To site at', mkIn(b['To site at'] || '06:30', 'time'));
+    add('Return at', mkIn(b['Return at'] || '17:00', 'time'));
+    const seats = mkIn(b.Seats || 11, 'number'); seats.min = 1; seats.max = 60; add('Seats', seats);
+    add('Driver', mkIn(b.Driver, 'text'));
+    add('Driver mobile', mkIn(b['Driver mobile'], 'tel'));
+    add('Plate', mkIn(b.Plate, 'text'));
+    add('Ride with (bus)', mkSel(CF.buses.filter(x => x.Bus !== b.Bus).map(x => x.Bus), b['Ride with (bus)'], '— runs on its own —'), 'On the days below, this bus’s riders ride with that bus (e.g. one bus on Saturday).');
+    add('On these days', daysPick(b['On these days'] || ''));
+    add('Open to all on', daysPick(b['Open to all on'] || ''), 'On these days any employee can also book this bus (e.g. Thursday back to Cairo).');
+    add('Active', yn(b.Active || 'Yes'));
+    add('Notes', mkIn(b.Notes, 'text'));
+    c.appendChild(g);
+    const br = el('div', 'btnrow');
+    br.appendChild(saveBtn(create ? 'Add bus' : 'Save bus', async () => {
+      const fields = {}; Object.keys(f).forEach(k => fields[k] = f[k].val ? f[k].val() : f[k].value);
+      await api('adminSave', { kind: 'bus', key: create ? '' : b.Bus, fields: fields }); toast('✓ Saved'); bEdit = null; AD = null; prefetchAdmin(); redraw();
+    }));
+    if (!create) { const rm = el('button', 'btn small red', 'Delete bus'); rm.type = 'button';
+      rm.onclick = async () => { if (!confirm('Delete ' + b.Bus + '?')) return; try { await api('adminSave', { kind: 'bus', key: b.Bus, remove: true }); toast('✓ Deleted'); bEdit = null; redraw(); } catch (e) { toast('⚠️ ' + e.message); } }; br.appendChild(rm); }
+    const cl = el('button', 'btn small line', 'Close'); cl.type = 'button'; cl.onclick = () => { bEdit = null; drawPane(); }; br.appendChild(cl);
+    c.appendChild(br); return c;
+  }
+
+  /* ---------- Units ---------- */
+  function setUnits(box) {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🏠 Units · beds · bus route order'));
+    c.appendChild(el('div', 'meta', 'Pickup Order = the stop number on the bus route (1 = first stop). Bus lists follow this order.'));
+    const t = el('div', 'utable u'); ['Unit', 'Resort', 'Type', 'Beds', 'Pickup', 'Map link', 'Residents', ''].forEach(h => t.appendChild(el('b', '', h)));
+    const addRow = (u, isNew) => {
+      const name = mkIn(u.Unit, 'text'); name.disabled = !isNew; const res = mkIn(u.Resort, 'text'); const type = mkSel(['Chalet', 'Villa', 'Apartment', 'Room'], u.Type, '—');
+      const beds = mkIn(u.Beds, 'number'); const po = mkIn(u['Pickup Order'], 'number'); const loc = mkIn(u.Location, 'url', 'Google Maps link'); const n = el('span', 'meta', String(CF.users.filter(x => x.Unit === u.Unit && String(x.Active).toLowerCase() !== 'no').length));
+      [name, res, type, beds, po, loc, n].forEach(x => t.appendChild(x));
+      t.appendChild(saveBtn(isNew ? 'Add' : 'Save', async () => {
+        await api('adminSave', { kind: 'unit', key: isNew ? '' : u.Unit, fields: { Unit: name.value, Resort: res.value, Type: type.value, Beds: beds.value, 'Pickup Order': po.value, Location: loc.value } }); toast('✓ Saved'); redraw();
+      }));
+    };
+    CF.units.slice().sort((a, b) => (Number(a['Pickup Order']) || 999) - (Number(b['Pickup Order']) || 999)).forEach(u => addRow(u, false));
+    addRow({}, true);
+    const wrap = el('div', 'mwrap'); wrap.appendChild(t); c.appendChild(wrap); box.appendChild(c);
+    settingsCard(box, SECTIONS.units, 'Housing settings');
+  }
+
+  /* ---------- Supplies ---------- */
+  function setSupplies(box) {
+    const top = el('div', 'sbar'); const nb = el('button', 'btn small', '+ New item'); nb.type = 'button'; nb.onclick = () => { cEdit = { create: true }; drawPane(); }; top.appendChild(nb); box.appendChild(top);
+    if (cEdit) box.appendChild(itemEditor(cEdit.create ? null : CF.catalog.find(i => i['Item Code'] === cEdit.key)));
+    const c = el('div', 'card plist');
+    CF.catalog.forEach(i => {
+      const r = el('button', 'prow' + (String(i.Active).toLowerCase() === 'no' ? ' off' : '')); r.type = 'button';
+      const a = el('span', 'pn'); a.appendChild(el('b', '', i['Item (English)'] + (i['Item (Arabic)'] ? ' · ' + i['Item (Arabic)'] : ''))); a.appendChild(el('small', '', i['Item Code'] + ' · ' + String(i.Category).split(' - ')[0] + ' · max ' + i['Max per Request']));
+      const tags = el('span', 'ptags'); if (i.Scope === 'One per department') tags.appendChild(el('i', '', 'Shared per department')); if (i.Departments) tags.appendChild(el('i', '', 'Only: ' + i.Departments)); if (String(i.Active).toLowerCase() === 'no') tags.appendChild(el('i', '', 'Hidden'));
+      r.appendChild(a); r.appendChild(tags); r.onclick = () => { cEdit = { key: i['Item Code'] }; drawPane(); window.scrollTo({ top: 0, behavior: 'smooth' }); }; c.appendChild(r);
+    });
+    box.appendChild(c);
+    settingsCard(box, SECTIONS.supplies, 'Supplies settings');
+  }
+  function itemEditor(i) {
+    const c = el('div', 'card editor'), create = !i; i = i || {};
+    const nextCode = 'ST-' + String(Math.max(0, ...CF.catalog.map(x => Number(String(x['Item Code']).replace(/\D/g, '')) || 0)) + 1).padStart(2, '0');
+    c.appendChild(el('div', 'ttl', create ? '+ New item' : '✏️ ' + i['Item (English)']));
+    const g = grid2(), f = {}; const add = (k, inp, h) => { f[k] = inp; g.appendChild(fieldBox(k, inp, h)); };
+    add('Item Code', mkIn(i['Item Code'] || nextCode, 'text')); if (!create) f['Item Code'].disabled = true;
+    add('Item (English)', mkIn(i['Item (English)'], 'text')); add('Item (Arabic)', mkIn(i['Item (Arabic)'], 'text'));
+    add('Category', mkSel(CF.categories, i.Category, '—')); add('Unit', mkIn(i.Unit || 'Piece', 'text'));
+    const mx = mkIn(i['Max per Request'] || 10, 'number'); mx.min = 1; add('Max per Request', mx);
+    add('Active', yn(i.Active || 'Yes'));
+    add('Scope', mkSel(CF.lists.scopes, i.Scope || 'Everyone'), 'One per department = a shared item (e.g. a stapler): once someone in the department requests it, others see a message.');
+    const dp = el('div', 'dpick'); const chosen = new Set(String(i.Departments || '').split(/[,،;]+/).map(x => x.trim()).filter(Boolean));
+    CF.departments.forEach(d => { const l = el('label'); const cb = el('input'); cb.type = 'checkbox'; cb.value = d; cb.checked = chosen.has(d); l.appendChild(cb); l.appendChild(document.createTextNode(' ' + d)); dp.appendChild(l); });
+    dp.val = () => [...dp.querySelectorAll('input:checked')].map(x => x.value).join(', '); add('Departments', dp, 'Only these departments see the item. None ticked = everyone.');
+    add('Note', mkIn(i.Note, 'text'), 'Shown to the employee on the item.');
+    add('Image URL', mkIn(i['Image URL'], 'url'), 'A Google Drive or web link to a photo.');
+    c.appendChild(g);
+    const br = el('div', 'btnrow');
+    br.appendChild(saveBtn(create ? 'Add item' : 'Save item', async () => {
+      const fields = {}; Object.keys(f).forEach(k => { if (k === 'Item Code' && !create) return; fields[k] = f[k].val ? f[k].val() : f[k].value; });
+      await api('adminSave', { kind: 'catalog', key: create ? '' : i['Item Code'], fields: fields }); toast('✓ Saved'); cEdit = null; catalog = null; redraw();
+    }));
+    const cl = el('button', 'btn small line', 'Close'); cl.type = 'button'; cl.onclick = () => { cEdit = null; drawPane(); }; br.appendChild(cl);
+    c.appendChild(br); return c;
+  }
+
+  /* ---------- Transport & fuel ---------- */
+  function setTransport(box) {
+    settingsCard(box, SECTIONS.transport, 'Transport requests · fuel');
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🚗 Company vehicles'));
+    const t = el('div', 'utable v'); ['Plate', 'Vehicle', 'Fuel', 'Driver', 'Tank (L)', 'Active', ''].forEach(h => t.appendChild(el('b', '', h)));
+    const drivers = CF.users.filter(u => u.Role === 'Driver').map(u => [u.code, u.Name]);
+    const row = (v, isNew) => {
+      const plate = mkIn(v.Plate, 'text'); plate.disabled = !isNew; const name = mkIn(v.Vehicle, 'text'); const fuel = mkSel(CF.lists.fuel, v['Fuel Type'], '—');
+      const drv = mkSel(drivers, v['Assigned Driver (User Code)'], '—'); const tank = mkIn(v['Tank (L)'], 'number'); const act = yn(v.Active || 'Yes');
+      [plate, name, fuel, drv, tank, act].forEach(x => t.appendChild(x));
+      t.appendChild(saveBtn(isNew ? 'Add' : 'Save', async () => { await api('adminSave', { kind: 'vehicle', key: isNew ? '' : v.Plate,
+        fields: { Plate: plate.value, Vehicle: name.value, 'Fuel Type': fuel.value, 'Assigned Driver (User Code)': drv.value, 'Tank (L)': tank.value, Active: act.value } }); toast('✓ Saved'); redraw(); }));
+    };
+    CF.vehicles.forEach(v => row(v, false)); row({}, true);
+    const wrap = el('div', 'mwrap'); wrap.appendChild(t); c.appendChild(wrap); box.appendChild(c);
+  }
+
+  /* ---------- Data ---------- */
+  function setData(box) {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🗂️ The data'));
+    c.appendChild(el('div', 'meta', 'Everything is stored in the Google Sheet (the database). Every e-mail is listed in its "E-mail Log" tab.'));
+    if (CF.sheetUrl) { const a = el('a', 'btn small line', 'Open the sheet ↗'); a.href = CF.sheetUrl; a.target = '_blank'; a.rel = 'noopener'; a.style.display = 'inline-block'; a.style.marginTop = '10px'; c.appendChild(a); }
+    box.appendChild(c);
+    const d = el('div', 'card danger'); d.appendChild(el('div', 'ttl', '⚠️ Clear all requests (start fresh)'));
+    d.appendChild(el('div', 'meta', 'Deletes all meal orders, bus bookings, guest meals, supplies, housing, transport and fuel entries, and the e-mail log. People, menu, buses, units, catalog and settings stay. This cannot be undone.'));
+    const g = grid2(); const conf = mkIn('', 'text', 'Type DELETE'); g.appendChild(fieldBox('Confirm', conf)); d.appendChild(g);
+    const br = el('div', 'btnrow'); const b = saveBtn('Clear all requests', async () => {
+      if (conf.value !== 'DELETE') return toast('Type DELETE to confirm');
+      if (!confirm('Delete all requests and orders now?')) return;
+      await api('adminSave', { kind: 'reset', confirm: 'DELETE' }); conf.value = ''; toast('✓ All requests cleared'); AD = null; prefetchAdmin();
+    }); b.classList.add('red'); br.appendChild(b); d.appendChild(br); box.appendChild(d);
+  }
+
+  /* =================== CONTROL ROOM → REPORTS =================== */
+  let rMonth = '', REP = null;
+  async function paneReports(box) {
+    const bar = el('div', 'sbar noprint');
+    const m = mkIn(rMonth || new Date().toISOString().slice(0, 7), 'month'); m.style.maxWidth = '220px';
+    const go2 = el('button', 'btn small', 'Show report'); go2.type = 'button';
+    const pr = el('button', 'btn small line', '🖨️ Print / PDF'); pr.type = 'button'; pr.onclick = () => window.print();
+    const csv = el('button', 'btn small line', '⬇️ Excel (CSV)'); csv.type = 'button'; csv.onclick = () => REP && downloadCsv(REP);
+    [m, go2, pr, csv].forEach(x => bar.appendChild(x)); box.appendChild(bar);
+    const out = el('div', 'report'); box.appendChild(out);
+    const load = async () => { rMonth = m.value; out.innerHTML = '<div class="loading">Preparing the report…</div>'; try { REP = await api('adminReport', { month: m.value }); drawReport(out, REP); } catch (e) { out.innerHTML = ''; toast('⚠️ ' + e.message); } };
+    go2.onclick = load; if (REP && REP.month === (rMonth || m.value)) drawReport(out, REP); else load();
+  }
+  function drawReport(box, r) {
+    box.innerHTML = '';
+    const h = el('div', 'rhead'); h.appendChild(el('h3', '', 'Monthly report — ' + r.title)); h.appendChild(el('div', 'meta', (document.getElementById('bName').textContent || 'SAFfly Crew') + ' · generated ' + r.generated)); box.appendChild(h);
+    const k = el('div', 'kpis');
+    const tile = (t, n, s, c) => { const b = el('div', 'kpi'); b.style.setProperty('--c', c); b.appendChild(el('span', 't', t)); b.appendChild(el('span', 'n', String(n))); b.appendChild(el('span', 's', s)); k.appendChild(b); };
+    tile('Meals', r.meals.total + r.meals.guests, r.meals.guests + ' guest meals', '#0F766E');
+    tile('Bus rides', r.bus.rides, r.bus.byBus.length + ' buses', '#6D28D9');
+    tile('Supply items', r.supplies.items.reduce((a, x) => a + x.qty, 0), r.supplies.items.length + ' different items', '#2456AD');
+    tile('Housing requests', r.housing.total, r.housing.completed + ' completed · avg ' + r.housing.avgHours + ' h', '#B45309');
+    tile('Transport', r.transport.total, r.transport.approved + ' approved', '#7C3AED');
+    tile('Fuel', r.fuel.reduce((a, x) => a + x.egp, 0).toLocaleString('en') + ' EGP', r.fuel.reduce((a, x) => a + x.fills, 0) + ' fills', '#475569');
+    box.appendChild(k);
+    const sec = (title, node) => { const c = el('div', 'card rsec'); c.appendChild(el('div', 'ttl', title)); c.appendChild(node); box.appendChild(c); };
+    const table = (heads, rows) => { const t = el('table', 'rtab'); const tr = el('tr'); heads.forEach(x => tr.appendChild(el('th', '', x))); t.appendChild(tr);
+      if (!rows.length) { const e = el('tr'); const td = el('td', '', 'No data'); td.colSpan = heads.length; e.appendChild(td); t.appendChild(e); }
+      rows.forEach(rr => { const e = el('tr'); rr.forEach(x => e.appendChild(el('td', '', x == null ? '' : String(x)))); t.appendChild(e); }); return t; };
+    const colors = { MAIN: '#0F766E', ALT: '#14B8A6', INDIAN: '#E8A33D', DIET: '#65A30D', SANDWICH: '#2456AD' };
+    const two = el('div', 'twocol');
+    two.appendChild(bars(r.meals.byType.map(x => [x.label + ' · ' + x.ar, x.n, colors[x.key]]), '#0F766E'));
+    two.appendChild(table(['Day', 'Meals'], r.meals.days.map(d => [d.date, d.n])));
+    sec('🍽️ Meals', two);
+    sec('🚌 Buses', table(['Bus', 'To site', 'Return'], r.bus.byBus.map(b => [b.bus, b.to, b.back])));
+    const s2 = el('div', 'twocol'); s2.appendChild(table(['Item', 'Requested', 'Issued'], r.supplies.items.map(i => [i.item, i.qty, i.issued])));
+    s2.appendChild(bars(r.supplies.byDept.map(d => [d.dept, d.qty]), '#2456AD')); sec('📎 Office supplies (by item · by department)', s2);
+    const h2 = el('div', 'twocol'); h2.appendChild(table(['Type', 'Requests'], r.housing.byType.map(x => [x.type, x.n])));
+    h2.appendChild(table(['Total', 'Completed', 'Open', 'Emergencies', 'Avg hours'], [[r.housing.total, r.housing.completed, r.housing.open, r.housing.emergencies, r.housing.avgHours]])); sec('🏠 Housing', h2);
+    sec('🚐 Transport requests', table(['Total', 'Approved', 'Rejected'], [[r.transport.total, r.transport.approved, r.transport.rejected]]));
+    sec('⛽ Fuel by vehicle', table(['Plate', 'Fills', 'EGP', 'Liters', 'km', 'EGP / km'], r.fuel.map(f => [f.plate, f.fills, f.egp, f.liters, f.km, f.egpkm])));
+  }
+  function downloadCsv(r) {
+    const L = [], q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', add = (t, heads, rows) => { L.push(q(t)); L.push(heads.map(q).join(',')); rows.forEach(x => L.push(x.map(q).join(','))); L.push(''); };
+    add('Meals by type — ' + r.title, ['Type', 'Meals'], r.meals.byType.map(x => [x.label, x.n]));
+    add('Meals by day', ['Day', 'Meals'], r.meals.days.map(d => [d.date, d.n]));
+    add('Buses', ['Bus', 'To site', 'Return'], r.bus.byBus.map(b => [b.bus, b.to, b.back]));
+    add('Office supplies', ['Item', 'Requested', 'Issued'], r.supplies.items.map(i => [i.item, i.qty, i.issued]));
+    add('Supplies by department', ['Department', 'Qty'], r.supplies.byDept.map(d => [d.dept, d.qty]));
+    add('Housing by type', ['Type', 'Requests'], r.housing.byType.map(x => [x.type, x.n]));
+    add('Fuel by vehicle', ['Plate', 'Fills', 'EGP', 'Liters', 'km', 'EGP/km'], r.fuel.map(f => [f.plate, f.fills, f.egp, f.liters, f.km, f.egpkm]));
+    const blob = new Blob(['﻿' + L.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'SAFfly report ' + r.month + '.csv'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
 
   function paneSupplies(box) {
