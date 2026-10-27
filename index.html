@@ -212,6 +212,18 @@
   @media (prefers-reduced-motion: reduce) { .view:not([hidden]) { animation: none; } }
 
   @media (max-width: 640px) { #aPanes table { display: block; max-width: 100%; overflow-x: auto; } }
+  .weeknav { display: flex; align-items: center; gap: 10px; margin: 10px 0 4px; } .weeknav .btn { width: auto; padding: 6px 14px; } .weeknav b { font-family: var(--cond); font-size: 18px; }
+  .weektot { margin-top: 10px; font-size: 14px; color: var(--slate); } .weektot b { font-size: 20px; color: var(--ink); font-family: var(--cond); }
+  .plist { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; } .pchip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 13.5px; }
+  .pchip:hover { border-color: var(--blue); color: var(--blue); } .pweek > select { margin: 6px 0 10px; }
+  .pdays { display: grid; gap: 8px; } .pday { display: grid; grid-template-columns: 1fr minmax(150px, 220px) auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px; }
+  .pday small { display: block; color: var(--slate); font-size: 12.5px; direction: rtl; text-align: left; } @media (max-width: 560px) { .pday { grid-template-columns: 1fr; } }
+  .trbtn { display: block; width: 100%; margin: 0 0 12px; border: 1.5px dashed #9DB7E5; background: #F3F7FE; color: var(--blue); border-radius: 12px; padding: 10px; font: inherit; font-weight: 600; cursor: pointer; }
+  .trbtn.on { border-style: solid; } .opt .d.entr { color: var(--blue); font-style: italic; direction: ltr; text-align: left; } .opt.sel .d.entr { color: #DCE7FA; }
+  .stagehd { margin: 14px 0 8px; font-weight: 700; font-size: 13.5px; color: var(--slate); letter-spacing: .3px; } .stagehd:first-of-type { margin-top: 4px; }
+  .req.stage-review { border-color: #F3D9A4; background: #FFFCF4; } .req.stage-ready { border-color: #B9E3C9; background: #F4FBF6; }
+  .qtyedit { display: inline-flex; align-items: center; gap: 6px; } .qtyedit input { width: 70px; padding: 6px 8px; font-size: 15px; } .qtyedit small { color: var(--slate); }
+  .badge.ready { background: #DBEAFE; color: #1D4ED8; } .links .sentco { color: #15803D; font-weight: 600; }
   /* announcements + important numbers */
   #news { display: grid; gap: 10px; margin: 0 0 14px; }
   .news { display: flex; gap: 12px; align-items: flex-start; background: linear-gradient(135deg, #173E82, #2456AD); color: #fff; border-radius: 16px; padding: 13px 12px 13px 14px; box-shadow: 0 10px 24px rgba(23,62,130,.22); animation: viewIn .4s both; }
@@ -1030,6 +1042,9 @@
     const box = $('days'); box.innerHTML = '';
     if (!meals.eligible) return box.appendChild(el('div', 'empty', 'Meals are not enabled for your account. Please contact Admin.'));
     if (!meals.days.length) return box.appendChild(el('div', 'empty', 'The menu for the coming days has not been published yet.'));
+    const canTr = meals.days.some(d => d.mainEn || d.altEn); let showEn = recall('hub_tr') ? recall('hub_tr') === '1' : LANG === 'English';
+    if (canTr) { const tb = el('button', 'trbtn' + (showEn ? ' on' : ''), showEn ? '🌐 Hide English menu · إخفاء الترجمة' : '🌐 Translate the menu to English · ترجمة القائمة'); tb.type = 'button';
+      tb.onclick = () => { store('hub_tr', showEn ? '0' : '1'); drawMeals(); }; box.appendChild(tb); }
     meals.days.forEach(d => {
       const card = el('div', 'day' + (d.locked ? ' shut' : ''));
       const h = el('div', 'dayh'); const t = el('div'); t.appendChild(el('b', '', d.label));
@@ -1045,8 +1060,8 @@
         const r = el('input'); r.type = 'radio'; r.name = 'd' + d.date; r.value = c.key; r.disabled = d.locked; r.checked = picks[d.date] === c.key;
         r.onchange = () => { picks[d.date] = c.key; paint(opts, d.date); actionBar(); };
         const tt = el('div', 't', en + ' '); tt.appendChild(ar(a)); o.appendChild(r); o.appendChild(tt);
-        if (c.key === 'MAIN') o.appendChild(el('div', 'd', d.main));
-        if (c.key === 'ALT') o.appendChild(el('div', 'd', d.alt));
+        if (c.key === 'MAIN') { o.appendChild(el('div', 'd', d.main)); if (showEn && d.mainEn) o.appendChild(el('div', 'd entr nolang', d.mainEn)); }
+        if (c.key === 'ALT') { o.appendChild(el('div', 'd', d.alt)); if (showEn && d.altEn) o.appendChild(el('div', 'd entr nolang', d.altEn)); }
         opts.appendChild(o);
       });
       card.appendChild(opts); box.appendChild(card); paint(opts, d.date);
@@ -1351,7 +1366,7 @@
 
   /* ---------------- my requests ---------------- */
   function badge(status) {
-    const cls = /Issued$|Completed|Approved/.test(status) ? 'good' : /Partially|In Progress|Assigned|Query|On Hold/.test(status) ? 'mid' : /Cancelled|Not Available|Rejected/.test(status) ? 'off' : '';
+    const cls = /^Ready$/.test(status) ? 'ready' : /Issued$|Completed|^Approved/.test(status) ? 'good' : /Partially|In Progress|Assigned|Query|On Hold/.test(status) ? 'mid' : /Cancelled|Not Available|Rejected/.test(status) ? 'off' : '';
     return el('span', 'badge ' + cls, status);
   }
   async function loadMine() {
@@ -1363,7 +1378,7 @@
     section('Housing', r.housing, q => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', q.id)); h.appendChild(el('span', '', q.date)); c.appendChild(h);
       const l = el('div', 'ln'); l.appendChild(el('span', '', split(q.item)[0] + (q.urgency.indexOf('Emergency') === 0 ? ' · Emergency' : '') + (q.remarks ? ' — ' + q.remarks : ''))); l.appendChild(badge(q.status)); c.appendChild(l); if (q.status === 'Completed') c.appendChild(rateBox(q)); return c; });
     section('Office supplies', r.supplies, q => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', q.id)); h.appendChild(el('span', '', q.date)); c.appendChild(h);
-      q.lines.forEach(x => { const l = el('div', 'ln'); l.appendChild(el('span', '', x.qty + ' × ' + x.item + (x.remarks ? ' — ' + x.remarks : ''))); l.appendChild(badge(x.status)); c.appendChild(l); }); return c; });
+      q.lines.forEach(x => { const l = el('div', 'ln'); l.appendChild(el('span', '', (x.approved !== '' && x.approved != null && Number(x.approved) !== Number(x.qty) ? x.approved + ' of ' + x.qty : x.qty) + ' × ' + x.item + (x.remarks ? ' — ' + x.remarks : ''))); l.appendChild(badge(x.status)); c.appendChild(l); }); return c; });
     section('Meals coming up', r.meals, m => { const l = el('div', 'ln'); l.appendChild(el('span', '', m.label)); l.appendChild(el('b', '', split(m.choice)[0] + (m.meal ? ' — ' + m.meal : ''))); return l; });
     section('Transport', r.transport, q => { const c = el('div', 'req'), h = el('div', 'h'); h.appendChild(el('b', '', q.id)); h.appendChild(el('span', '', q.date)); c.appendChild(h);
       const l = el('div', 'ln'); l.appendChild(el('span', '', q.from + ' → ' + q.to + (q.round ? ' (round trip)' : '') + (q.driver ? ' · Driver: ' + q.driver : '') + (q.remarks ? ' — ' + q.remarks : ''))); l.appendChild(badge(q.status)); c.appendChild(l); return c; });
@@ -1432,7 +1447,7 @@
   const PANES = [['settings', '⚙️ Settings'], ['reports', '📊 Reports'], ['units', '🏘️ Units'], ['housing', '🏠 Housing'], ['meals', '🍽️ Meals'], ['bus', '🚌 Bus'], ['supplies', '📎 Supplies'], ['transport', '🚐 Transport'], ['fuel', '⛽ Fuel'], ['news', '📣 News']];
   function toast(t) { document.querySelectorAll('.toast').forEach(x => x.remove()); const d = el('div', 'toast', t); document.body.appendChild(d); setTimeout(() => d.remove(), 2600); }
   const pill = (t, cls) => el('span', 'pill ' + (cls || ''), t);
-  const stCls = s => /Completed|Issued|Approved/.test(s) ? 'green' : /Progress|Assigned|Query|Hold/.test(s) ? 'amber' : /Cancelled|Rejected|Not Available/.test(s) ? 'grey' : '';
+  const stCls = s => /Completed|Issued|^Approved/.test(s) ? 'green' : /Progress|Assigned|Query|Hold|Partially|Ready/.test(s) ? 'amber' : /Cancelled|Rejected|Not Available/.test(s) ? 'grey' : '';
   function ago(ts) { if (!ts) return ''; const h = (Date.now() - ts) / 36e5; return h < 1 ? Math.max(1, Math.round(h * 60)) + ' min ago' : h < 48 ? Math.round(h) + ' h ago' : Math.round(h / 24) + ' days ago'; }
   function sel(options, value, onchange, blank) {
     const s = el('select'); if (blank !== undefined) s.appendChild(new Option(blank, ''));
@@ -1516,7 +1531,7 @@
     card('fuel', '#475569', k.fuelEgp.toLocaleString('en') + ' EGP', 'Fuel this month', k.fuelFlagged + ' flagged · ' + k.fuelPending + ' to check', k.fuelFlagged > 0);
   }
   function drawSegs() {
-    const k = AD.kpis, badge = { housing: k.emergencies || 0, transport: k.transportNew, fuel: k.fuelFlagged, supplies: 0, meals: 0 };
+    const k = AD.kpis, badge = { housing: k.emergencies || 0, transport: k.transportNew, fuel: k.fuelFlagged, supplies: k.supplyNew || 0, meals: 0 };
     const box = $('aSegs'); box.innerHTML = '';
     PANES.forEach(([id, label]) => {
       const b = el('button', id === aTab ? 'on' : '', label); b.type = 'button';
@@ -1564,8 +1579,17 @@
       if (h.hours) links.appendChild(el('span', '', '⏱ ' + h.hours + ' h to close'));
       else if (open(h.status) && h.ts) { const age = (Date.now() - h.ts) / 36e5, late = h.urgent ? age > 2 : age > 48;
         links.appendChild(el('span', 'age' + (late ? ' late' : age > (h.urgent ? 1 : 24) ? ' warn' : ''), '⏳ open ' + (age < 1 ? Math.max(1, Math.round(age * 60)) + ' min' : age < 48 ? Math.round(age) + ' h' : Math.round(age / 24) + ' days'))); }
+      if (h.sent) links.appendChild(el('span', 'sentco', '📤 Sent to company ' + h.sent));
       if (h.rating) { const rt = el('span', 'rated'); rt.appendChild(starsRow(h.rating)); if (h.rcomment) rt.appendChild(el('em', 'nolang', '“' + h.rcomment + '”')); links.appendChild(rt); }
       c.appendChild(links);
+      if (open(h.status)) { const qa = el('div', 'btnrow');
+        const send = el('button', 'btn small' + (h.sent ? ' line' : ' green'), h.sent ? '📤 Send again to company' : '✓ Approve & send to company'); send.type = 'button';
+        send.title = AD.companyMail ? 'To: ' + AD.companyMail : 'Add the company e-mail: Settings → Units & housing';
+        send.onclick = async () => { send.disabled = true; try { const r = await api('adminSend', { kind: 'houseOne', id: h.id });
+          toast(r.sent ? '✓ Sent to ' + r.to + ' — now In Progress' : '✓ Now In Progress — e-mail not sent (E-mails: ' + r.mode + ')'); await loadAdmin(true); } catch (e) { toast('⚠️ ' + e.message); send.disabled = false; } };
+        qa.appendChild(send);
+        if (h.status !== 'New') { const done = el('button', 'btn small line', '✓ Job done — Completed'); done.type = 'button'; done.onclick = () => update('housing', h.id, { Status: 'Completed' }, '✓ ' + h.id + ' completed'); qa.appendChild(done); }
+        c.appendChild(qa); }
       const ctrl = el('div', 'ctrl');
       ctrl.appendChild(sel(AD.lists.houseStatus, h.status, v => update('housing', h.id, { Status: v }, '✓ ' + h.id + ' → ' + v)));
       ctrl.appendChild(sel(AD.lists.assignees, h.assigned, v => update('housing', h.id, { 'Assigned To': v }, '✓ Assigned'), 'Assign to…'));
@@ -1583,7 +1607,7 @@
     const ms = el('textarea'); ms.placeholder = 'Details (optional)'; ms.maxLength = 1500; ms.rows = 3;
     const un = mkIn('', 'date'); { const d = new Date(Date.now() + 3 * 864e5); un.value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
     const au = mkSel((AD.lists.audiences || ['Everyone']).map(a => [a, a]), 'Everyone');
-    const em = el('label', 'toggle'); const ec = el('input'); ec.type = 'checkbox'; em.appendChild(ec); em.appendChild(document.createTextNode(' Also e-mail them (people with an e-mail in Users)'));
+    const em = el('label', 'toggle'); const ec = el('input'); ec.type = 'checkbox'; em.appendChild(ec); em.appendChild(document.createTextNode(AD.empMail ? ' Also e-mail them (people with an e-mail in Users)' : ' E-mail is off for employees (Settings → People)')); ec.disabled = !AD.empMail;
     g.appendChild(fieldBox('Title', ti)); g.appendChild(fieldBox('Show until', un)); g.appendChild(fieldBox('Who sees it', au)); g.appendChild(fieldBox('Details', ms)); c.appendChild(g); c.appendChild(em);
     const br = el('div', 'btnrow'); br.appendChild(saveBtn('Publish', async () => {
       if (!ti.value.trim()) return toast('Write a title first');
@@ -1636,18 +1660,6 @@
     });
     two.appendChild(names); c.appendChild(two);
 
-    // security & workers sandwiches — a quantity per day for the whole week
-    const sw = el('div', 'lightbox'); sw.appendChild(el('div', 'meta', '🥪 Security & workers sandwiches · سندوتشات الأمن والعمال'));
-    const week = AD.meals.filter(x => { const a = new Date(d.date + 'T12:00:00'), b = new Date(x.date + 'T12:00:00'); const sa = new Date(a); while (sa.getDay() !== 6) sa.setDate(sa.getDate() - 1); const th = new Date(sa); th.setDate(th.getDate() + 5); return b >= sa && b <= th; });
-    const lg = el('div', 'lightgrid'), lin = {};
-    week.forEach(x => { const c = el('label'); c.appendChild(el('span', '', x.label.split(' ').slice(0, 2).join(' '))); const i = mkIn(x.counts.LIGHT || '', 'number', '0'); i.min = 0; i.max = 500; lin[x.date] = i; c.appendChild(i); lg.appendChild(c); });
-    sw.appendChild(lg);
-    const lb = el('div', 'btnrow');
-    const same = el('button', 'btn small line', 'Same number every day'); same.type = 'button'; same.onclick = () => { const v = lin[d.date] ? lin[d.date].value : ''; Object.values(lin).forEach(i => i.value = v); };
-    const sv = el('button', 'btn small', 'Save sandwiches'); sv.type = 'button';
-    sv.onclick = async () => { sv.disabled = true; const days = {}; Object.keys(lin).forEach(k => days[k] = lin[k].value || 0);
-      try { await api('adminSave', { kind: 'light', days: days }); toast('✓ Saved — added to the kitchen counts'); await loadAdmin(true); } catch (e) { toast('⚠️ ' + e.message); sv.disabled = false; } };
-    lb.appendChild(same); lb.appendChild(sv); sw.appendChild(lb); c.appendChild(sw);
 
     // guests / visitors (no user account)
     const gw = el('div'); gw.style.cssText = 'margin-top:16px;border-top:1px solid var(--line);padding-top:12px';
@@ -1680,7 +1692,7 @@
 
     // ready-to-send texts
     const kitchenText = 'طلب وجبات SAFfly — يوم ' + d.dayAr + ' ' + d.dateText + '\n\n' +
-      TYPES.map(t => t.ar + ': ' + d.counts[t.key]).join('\n') + '\n\nإجمالي الوجبات: ' + total(d) + (d.guestTotal ? ' (منها ' + d.guestTotal + ' للزوار)' : '');
+      TYPES.map(t => t.ar + ': ' + d.counts[t.key]).join('\n') + '\n\nإجمالي الوجبات: ' + total(d);
     const buffetText = 'توزيع وجبات يوم ' + d.dayAr + ' ' + d.dateText + ' — إجمالي ' + total(d) + '\n' +
       TYPES.filter(t => d.counts[t.key]).map(t => '\n*' + t.ar + ' (' + d.counts[t.key] + ')*\n' + d.groupsAr[t.key].map((x, i) => (i + 1) + '. ' + x).join('\n')).join('\n');
     const copy = async (text, what) => {
@@ -1703,6 +1715,73 @@
       b.onclick = async () => { b.disabled = true; try { const r = await api('adminSend', { kind: kind, date: d.date }); toast('✓ Sent — ' + r.sent + ' meals'); } catch (e) { toast('⚠️ ' + e.message); } b.disabled = false; };
     });
     c.appendChild(br); box.appendChild(c);
+    box.appendChild(lightWeekCard()); box.appendChild(plannerCard());
+  }
+
+  /* light meals for security & workers — choose the week, a number for each day, saved for the whole week */
+  const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const satOf = d => { const x = new Date(d); x.setHours(12, 0, 0, 0); while (x.getDay() !== 6) x.setDate(x.getDate() - 1); return x; };
+  let lwFrom = null;
+  function lightWeekCard() {
+    const c = el('div', 'card lightweek'); c.appendChild(el('div', 'ttl', '🥪 Light meals for security & workers · الوجبات الخفيفة'));
+    c.appendChild(el('div', 'meta', 'Choose the week, write the number for each day and save. They are added to the kitchen count of each day.'));
+    if (!lwFrom) { const t = new Date(); t.setDate(t.getDate() + (t.getDay() === 5 ? 1 : 0)); lwFrom = satOf(t); }
+    const nav = el('div', 'weeknav'), prev = el('button', 'btn small line', '‹'), next = el('button', 'btn small line', '›'), lab = el('b', 'num', '');
+    prev.type = next.type = 'button'; nav.appendChild(prev); nav.appendChild(lab); nav.appendChild(next); c.appendChild(nav);
+    const grid = el('div', 'lightgrid'), ins = {}, tot = el('div', 'weektot'); c.appendChild(grid); c.appendChild(tot);
+    const sum = () => { const n = Object.values(ins).reduce((a, i) => a + (Number(i.value) || 0), 0); tot.innerHTML = ''; tot.appendChild(document.createTextNode('Week total · إجمالي الأسبوع: ')); tot.appendChild(el('b', 'num', String(n))); };
+    const load = async () => {
+      const end = new Date(lwFrom); end.setDate(end.getDate() + 5);
+      lab.textContent = lwFrom.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' – ' + end.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      grid.innerHTML = '<div class="loading">Loading…</div>';
+      let r; try { r = await api('adminLight', { from: ymd(lwFrom) }); } catch (e) { grid.innerHTML = ''; return toast('⚠️ ' + e.message); }
+      grid.innerHTML = ''; Object.keys(ins).forEach(k => delete ins[k]);
+      Object.keys(r.days).forEach((k, j) => { const lb = el('label'); lb.appendChild(el('span', '', WEEK[j][0] + ' ' + k.slice(8) + '/' + k.slice(5, 7) + ' · ' + WEEK[j][1]));
+        const i = mkIn(r.days[k] || '', 'number', '0'); i.min = 0; i.max = 500; i.oninput = sum; ins[k] = i; lb.appendChild(i); grid.appendChild(lb); });
+      sum();
+    };
+    prev.onclick = () => { lwFrom.setDate(lwFrom.getDate() - 7); load(); }; next.onclick = () => { lwFrom.setDate(lwFrom.getDate() + 7); load(); };
+    const br = el('div', 'btnrow');
+    const same = el('button', 'btn small line', 'Same number every day'); same.type = 'button';
+    same.onclick = () => { const v = (Object.values(ins).find(i => i.value) || {}).value || ''; Object.values(ins).forEach(i => i.value = v); sum(); };
+    br.appendChild(same);
+    br.appendChild(saveBtn('Save the week', async () => { const days = {}; Object.keys(ins).forEach(k => days[k] = ins[k].value || 0);
+      await api('adminSave', { kind: 'light', days: days }); toast('✓ Saved — ' + Object.values(days).reduce((a, b) => a + (Number(b) || 0), 0) + ' light meals this week'); prefetchAdmin(); }));
+    c.appendChild(br); load(); return c;
+  }
+
+  /* plan a person's week (managers who never order) — search, see the week, change any day */
+  function plannerCard() {
+    const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '👤 Plan a person’s meals · تحديد وجبات موظف'));
+    c.appendChild(el('div', 'meta', 'For people who do not use the app (e.g. managers), or to correct a choice — allowed even after the cut-off.'));
+    const people = () => (CF && CF.users || []).filter(u => u.Meals === 'Yes' && String(u.Active).toLowerCase() !== 'no');
+    const q = mkIn('', 'search', 'Search name or code…'), list = el('div', 'plist'), week = el('div', 'pweek');
+    c.appendChild(q); c.appendChild(list); c.appendChild(week);
+    const showList = () => { list.innerHTML = ''; const t = q.value.trim().toLowerCase(); if (!t) return;
+      people().filter(u => (u.Name + ' ' + u.code + ' ' + (u['Name (Arabic)'] || '')).toLowerCase().includes(t)).slice(0, 8).forEach(u => {
+        const b = el('button', 'pchip', u.Name + ' · ' + u.code); b.type = 'button'; b.onclick = () => { list.innerHTML = ''; q.value = u.Name; open(u.code); }; list.appendChild(b); });
+      if (!list.children.length) list.appendChild(el('div', 'meta', 'No one found.')); };
+    q.oninput = showList;
+    const open = async code => {
+      week.innerHTML = '<div class="loading">Loading…</div>';
+      let r; try { r = await api('adminPersonMeals', { code: code }); } catch (e) { week.innerHTML = ''; return toast('⚠️ ' + e.message); }
+      week.innerHTML = ''; if (!r.days.length) return week.appendChild(el('div', 'empty', 'No menu for this week yet.'));
+      week.appendChild(el('div', 'ttl', r.name)); const sels = {};
+      const all = mkSel(r.choices.map(x => [x.key, split(x.label)[0]]), '', 'Same meal for every day…');
+      all.onchange = () => { if (all.value) Object.values(sels).forEach(s2 => { if ([...s2.options].some(o => o.value === all.value)) s2.value = all.value; }); };
+      week.appendChild(all);
+      const tb = el('div', 'pdays');
+      r.days.forEach(d => { const row = el('div', 'pday'); const l = el('div'); l.appendChild(el('b', '', d.label)); l.appendChild(el('small', 'nolang', d.main + (d.alt ? ' · ' + d.alt : '')));
+        const s2 = mkSel(r.choices.filter(x => x.key !== 'ALT' || d.alt).map(x => [x.key, split(x.label)[0]]), d.choice, '— not chosen —'); sels[d.date] = s2;
+        row.appendChild(l); row.appendChild(s2); if (d.locked) row.appendChild(el('span', 'pill grey', 'closed')); tb.appendChild(row); });
+      week.appendChild(tb);
+      const br = el('div', 'btnrow'); br.appendChild(saveBtn('Save his week', async () => { const ch = {}; r.days.forEach(d => { if (sels[d.date].value && sels[d.date].value !== d.choice) ch[d.date] = sels[d.date].value; });
+        if (!Object.keys(ch).length) return toast('Nothing changed');
+        const x = await api('adminSave', { kind: 'mealWeek', code: code, choices: ch }); toast('✓ Saved ' + x.saved + ' day(s) for ' + r.name.split(' ')[0]); prefetchAdmin(); open(code); }));
+      week.appendChild(br);
+    };
+    if (!CF) loadConfig().catch(() => {});
+    return c;
   }
 
 
@@ -1898,6 +1977,7 @@
       let i;
       if (type === 'yesno') i = yn(v);
       else if (type === 'login') i = mkSel([['Mobile', 'Mobile number'], ['Name', 'Name list']], v);
+      else if (type === 'housemode') i = mkSel([['After approval', 'After my approval (Approve & send)'], ['Immediately', 'Immediately, straight to the company']], v || 'After approval');
       else if (type === 'mailmode') i = mkSel([['Off', 'Off — send nothing'], ['Only me', 'Only me — test, everything comes to Admin'], ['On', 'On — send to everyone']], v || 'Off');
       else if (type === 'lang') i = mkSel([['Mixed', 'English + العربية (Mixed)'], ['English', 'English'], ['Arabic', 'العربية']], v || 'Mixed');
       else if (type === 'hour') { i = mkIn(v, 'number'); i.min = 0; i.max = 23; }
@@ -1964,6 +2044,7 @@
     return mkIn(v, type === 'tel' ? 'tel' : type === 'email' ? 'email' : 'text');
   }
   function setPeople(box) {
+    settingsCard(box, ['الموظفين'], '✉️ Employee e-mails · إيميلات الموظفين');
     const bar = el('div', 'sbar'); const q = mkIn(pSearch, 'search', 'Search name, code, mobile, department…'); q.oninput = () => { pSearch = q.value; drawList(); };
     bar.appendChild(q); const nb = el('button', 'btn small', '+ New employee'); nb.type = 'button'; nb.onclick = () => { pEdit = { create: true }; drawPane(); }; bar.appendChild(nb);
     box.appendChild(bar);
@@ -2036,18 +2117,7 @@
     const clr = el('button', 'btn small line', 'Clear'); clr.type = 'button'; clr.onclick = () => cells.forEach(r => r.forEach(t => t.value = '')); br.appendChild(clr);
     c.appendChild(br); box.appendChild(c);
 
-    // set someone's meal
-    const m = el('div', 'card'); m.appendChild(el('div', 'ttl', '👤 Set a meal for a person'));
-    m.appendChild(el('div', 'meta', 'For people who do not use the app, or to correct a choice — allowed even after the cut-off.'));
-    const g2 = grid2();
-    const who = mkSel(CF.users.filter(u => u.Meals === 'Yes' && String(u.Active).toLowerCase() !== 'no').map(u => [u.code, u.Name + ' · ' + u.code]), '', 'Choose a person…');
-    const day = mkSel([['WEEK', '★ The whole week (Sat–Thu)']].concat((AD && AD.meals || []).map(d => [d.date, d.label])), '', 'Choose the day…');
-    const meal = mkSel(CF.lists.choices.filter(c => c.key !== 'LIGHT').map(c => [c.key, c.label]), '', 'Choose the meal…');
-    g2.appendChild(fieldBox('Person', who)); g2.appendChild(fieldBox('Day', day)); g2.appendChild(fieldBox('Meal', meal)); m.appendChild(g2);
-    const b2 = el('div', 'btnrow'); b2.appendChild(saveBtn('Save meal', async () => {
-      if (!who.value || !day.value || !meal.value) return toast('Choose the person, day and meal');
-      const r = await api('adminSave', { kind: 'meal', code: who.value, date: day.value, choice: meal.value }); toast('✓ Saved for ' + r.saved + ' day(s) — counted in the kitchen and buffet reports'); prefetchAdmin();
-    })); m.appendChild(b2); box.appendChild(m);
+    box.appendChild(plannerCard());
     settingsCard(box, SECTIONS.menu, 'Meal settings · Saturday groups');
   }
 
@@ -2190,6 +2260,14 @@
 
   /* ---------- Data ---------- */
   function setData(box) {
+    const td = el('div', 'card'); td.appendChild(el('div', 'ttl', '🧪 Sample data for testing · بيانات تجريبية'));
+    td.appendChild(el('div', 'meta', 'Adds random meals, light meals, visitors, housing, supplies, transport, fuel and bus bookings for the last 3 weeks — so you can try the reports. Everything is marked TEST and is removed with one click. Real requests are never touched. No e-mails are sent.'));
+    const tb = el('div', 'btnrow');
+    tb.appendChild(saveBtn('Add sample data', async () => { const r = await api('adminSave', { kind: 'testData', action: 'add' }); const a = r.added;
+      toast('✓ Added: ' + a.meals + ' meals · ' + a.housing + ' housing · ' + a.supplies + ' supply lines · ' + a.transport + ' trips'); AD = null; prefetchAdmin(); }));
+    const rm = el('button', 'btn small line', 'Remove sample data'); rm.type = 'button';
+    rm.onclick = async () => { rm.disabled = true; try { const r = await api('adminSave', { kind: 'testData', action: 'remove' }); toast('✓ Removed ' + r.removed + ' sample row(s)'); AD = null; prefetchAdmin(); } catch (e) { toast('⚠️ ' + e.message); } rm.disabled = false; };
+    tb.appendChild(rm); td.appendChild(tb); box.appendChild(td);
     const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '🗂️ The data'));
     c.appendChild(el('div', 'meta', 'Everything is stored in the Google Sheet (the database). Every e-mail is listed in its "E-mail Log" tab.'));
     const lk = el('div', 'btnrow');
@@ -2294,16 +2372,31 @@
       row.after(p);
     }));
     if (S.items.some(i => i.other)) c1.appendChild(el('div', 'hint', '* not in the catalog — typed by the employee'));
-    const c2 = el('div', 'card'); c2.appendChild(el('div', 'ttl', 'Requests waiting'));
-    if (!S.requests.length) c2.appendChild(el('div', 'empty', 'No requests waiting.'));
-    S.requests.forEach(q => {
-      const r = el('div', 'req'); const h = el('div', 'h'); h.appendChild(el('b', '', q.name)); h.appendChild(el('span', '', q.id + ' · ' + q.date)); r.appendChild(h);
-      q.lines.forEach(l => { const d = el('div', 'ln'); d.appendChild(el('span', '', l.item)); d.appendChild(el('b', '', l.qty + ' ' + l.unit)); r.appendChild(d); });
-      if (q.notes) r.appendChild(el('div', 'hint', 'Notes: ' + q.notes));
-      const br = el('div', 'btnrow');
-      const ok = el('button', 'btn small green', '✓ Mark issued'); ok.type = 'button'; ok.onclick = () => update('supplies', q.id, { Status: 'Issued' }, '✓ ' + q.id + ' issued');
-      const na = el('button', 'btn small line', 'Not available'); na.type = 'button'; na.onclick = () => update('supplies', q.id, { Status: 'Not Available' }, q.id + ' → not available');
-      br.appendChild(ok); br.appendChild(na); r.appendChild(br); c2.appendChild(r);
+    const c2 = el('div', 'card'); c2.appendChild(el('div', 'ttl', 'Requests · الطلبات'));
+    const STAGES = [['review', '1 · To review · للمراجعة'], ['prepare', '2 · To prepare · للتجهيز'], ['ready', '3 · Ready for pickup · جاهز للاستلام']];
+    const step = async (id, st, extra, msg) => { try { const r = await api('adminSupply', Object.assign({ id: id, step: st }, extra || {})); toast(msg + (r.told ? ' — employee informed' : '')); await loadAdmin(true); } catch (e) { toast('⚠️ ' + e.message); } };
+    if (!S.requests.length) c2.appendChild(el('div', 'empty', 'No requests waiting. ✓'));
+    STAGES.forEach(([stage, title]) => {
+      const list = S.requests.filter(q => q.stage === stage); if (!list.length) return;
+      c2.appendChild(el('div', 'stagehd', title + ' (' + list.length + ')'));
+      list.forEach(q => {
+        const r = el('div', 'req stage-' + stage); const h = el('div', 'h'); h.appendChild(el('b', '', q.name)); h.appendChild(el('span', '', q.id + ' · ' + q.date)); r.appendChild(h);
+        const qin = {};
+        q.lines.forEach((l, k) => { const d = el('div', 'ln'); d.appendChild(el('span', '', l.item));
+          if (stage === 'review' && l.status === 'New') { const box2 = el('span', 'qtyedit'); const i = mkIn(l.qty, 'number'); i.min = 0; i.max = l.qty; qin[k] = i; box2.appendChild(i); box2.appendChild(el('small', '', 'of ' + l.qty + ' ' + l.unit)); d.appendChild(box2); }
+          else { d.appendChild(el('b', '', (l.approved !== '' && Number(l.approved) !== Number(l.qty) ? l.approved + ' of ' + l.qty : l.qty) + ' ' + l.unit)); d.appendChild(badge(l.status)); }
+          r.appendChild(d); });
+        if (q.notes) r.appendChild(el('div', 'hint', 'Notes: ' + q.notes));
+        const br = el('div', 'btnrow'), b = (t, cls, fn) => { const x = el('button', 'btn small ' + cls, t); x.type = 'button'; x.onclick = fn; br.appendChild(x); };
+        if (stage === 'review') {
+          b('✓ Approve', 'green', () => { const qty = {}; Object.keys(qin).forEach(k => qty[k] = qin[k].value); step(q.id, 'approve', { qty: qty }, '✓ ' + q.id + ' approved'); });
+          b('Not available', 'line', () => step(q.id, 'notAvailable', null, q.id + ' → not available'));
+          r.appendChild(el('div', 'hint', 'Change the number if you can give less. 0 = not available.'));
+        }
+        if (stage === 'prepare') b('📦 Ready for pickup', '', () => step(q.id, 'ready', null, '✓ ' + q.id + ' ready for pickup'));
+        if (stage === 'ready' || stage === 'prepare') b('✓ Handed over — Completed', stage === 'ready' ? 'green' : 'line', () => step(q.id, 'complete', null, '✓ ' + q.id + ' completed'));
+        r.appendChild(br); c2.appendChild(r);
+      });
     });
     two.appendChild(c1); two.appendChild(c2); box.appendChild(two);
     const dept = Object.entries(S.byDept).sort((a, b) => b[1] - a[1]);
@@ -2480,7 +2573,7 @@
     'Change my password': 'تغيير كلمة المرور', '+ Add another item': '+ إضافة صنف آخر', 'Use my current location': 'استخدام موقعي الحالي', 'Test e-mails': 'اختبار البريد',
     'Send daily report now': 'إرسال التقرير اليومي الآن', 'Requests waiting': 'طلبات بانتظار الرد', 'Save sandwiches': 'حفظ السندوتشات', 'Same number every day': 'نفس العدد لكل الأيام',
     'Choose your name': 'اختر اسمك', 'Going': 'الذهاب', 'Return': 'العودة', 'Cairo bus': 'باص القاهرة', 'Week': 'الأسبوع', 'Users': 'المستخدمون', 'People': 'الموظفون',
-    'Set your own password': 'اختر كلمة مرور خاصة بك', 'Save meals': 'حفظ الوجبات', 'Review request': 'مراجعة الطلب', 'Choose': 'اختر', 'Choose type first': 'اختر النوع أولاً',
+    'Set your own password': 'اختر كلمة مرور خاصة بك', 'Ready': 'جاهز للاستلام', 'Completed': 'مكتمل', 'Partially Approved': 'موافقة جزئية', 'Not Available': 'غير متوفر', 'New': 'جديد', 'In Progress': 'قيد التنفيذ', 'Save meals': 'حفظ الوجبات', 'Review request': 'مراجعة الطلب', 'Choose': 'اختر', 'Choose type first': 'اختر النوع أولاً',
     'Emergency': 'طارئ', 'Normal': 'عادي', 'Photo (optional)': 'صورة (اختياري)', 'Add photo': 'إضافة صورة', 'Your unit': 'وحدتك', 'Resort': 'المنتجع', 'Nothing yet.': 'لا يوجد شيء بعد.',
     'Meals coming up': 'الوجبات القادمة', 'Fuel entries': 'تسجيلات الوقود', 'Sending…': 'جارٍ الإرسال…', 'Saving…': 'جارٍ الحفظ…', 'Request sent': 'تم إرسال الطلب', 'Update location': 'تحديث الموقع',
     'To site': 'الذهاب', 'item': 'صنف', 'items': 'أصناف', 'change': 'تعديل', 'Check your request': 'راجع طلبك', 'All': 'الكل', 'Files': 'ملفات', 'Writing': 'أدوات الكتابة',
