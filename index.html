@@ -120,6 +120,9 @@
   .salary .ln { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
   .salary .ln.deduction span:last-child { color: #DC2626; }
   .salary .ln.total { font-weight: 700; }
+  .salary .ln.net { margin-top: 8px; border: 0; border-radius: 12px; background: #E8F5EE; padding: 11px 12px; font-size: 17px; font-weight: 700; color: #15803D; }
+  .salary .ln.earning span:last-child { color: var(--ink); } .salary .mon span { color: var(--slate); font-weight: 600; }
+  @media print { #v-salary .pwlink, #v-salary .head .back { display: none !important; } #v-salary { display: block !important; } }
   .salary .ln.net { font-weight: 800; font-size: 17px; border-bottom: 0; color: #15803D; }
   .pwlink { display: block; margin: 18px auto 0; background: none; border: 0; color: var(--slate); font-size: 14px; cursor: pointer; padding: 8px; }
   .pwlink:hover { color: var(--blue); }
@@ -987,6 +990,7 @@
         if (m.notes) c.appendChild(el('div', 'meta', m.notes));
         box.appendChild(c);
       });
+      const pr = el('button', 'pwlink', '🖨️ Print / save as PDF'); pr.type = 'button'; pr.onclick = () => window.print(); box.appendChild(pr);
       const again = el('button', 'pwlink', '🔒 Hide'); again.type = 'button'; again.onclick = () => { box.innerHTML = ''; $('salForm').hidden = false; }; box.appendChild(again);
     } catch (err) { say(err.message); }
     b.disabled = false; b.textContent = 'Show my salary';
