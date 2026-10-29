@@ -1408,10 +1408,13 @@
 
   /* ---------------- transport ---------------- */
   let tInfo = null;
+  /** First full hour at least one hour after the earliest allowed time, so a slow form never falls under the notice period. */
+  function tripDefault() { if (!tInfo) return ''; const d = new Date(tInfo.earliest); d.setMinutes(0, 0, 0); d.setHours(d.getHours() + 2);
+    const z = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()) + 'T' + z(d.getHours()) + ':00'; }
   async function loadTransport() {
     try { tInfo = await api('getTransport'); } catch (e) { return say(e.message); }
     $('tRule').firstChild.textContent = 'Work trips only. Request at least ' + tInfo.hours + ' hours before the trip — earliest: ' + tInfo.earliestText + '. ';
-    $('tWhen').min = tInfo.earliest; if (!$('tWhen').value) $('tWhen').value = tInfo.earliest;
+    $('tWhen').min = tInfo.earliest; if (!$('tWhen').value || $('tWhen').value < tInfo.earliest) $('tWhen').value = tripDefault();
   }
   $('tRound').onchange = () => { $('tBackBox').hidden = !$('tRound').checked; $('tBack').required = $('tRound').checked; if ($('tRound').checked && !$('tBack').value && $('tWhen').value) {
       const d = new Date($('tWhen').value); d.setHours(d.getHours() + 4);
@@ -1422,7 +1425,7 @@
     try {
       const r = await api('submitTransport', { when: $('tWhen').value, from: $('tFrom').value, to: $('tTo').value, round: $('tRound').checked,
         back: $('tBack').value, passengers: $('tPax').value, reason: $('tWhy').value });
-      $('transForm').reset(); $('tBackBox').hidden = true; $('tWhen').value = tInfo ? tInfo.earliest : '';
+      $('transForm').reset(); $('tBackBox').hidden = true; $('tWhen').value = tripDefault();
       done('Request sent', r.requestId, 'Admin will review it. You can follow it in My requests.');
     } catch (err) { say(err.message); }
     b.disabled = false; b.textContent = 'Send request';
