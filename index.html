@@ -310,6 +310,20 @@
   .rtab { width: 100%; border-collapse: collapse; font-size: 14px; } .rtab th { text-align: left; background: #F1F4F9; color: var(--slate); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
   .rtab th, .rtab td { padding: 7px 9px; border-bottom: 1px solid var(--line); }
   .rsec { break-inside: avoid; }
+  .kpis.dk .s { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; } .dlt { font-weight: 800; font-size: 11.5px; padding: 1px 6px; border-radius: 999px; background: #EEF2F8; color: var(--slate); }
+  .dlt.good { background: #DCFCE7; color: #15803D; } .dlt.bad { background: #FEE2E2; color: #B91C1C; }
+  .insights .ins { display: grid; gap: 1px; padding: 8px 0 8px 14px; border-bottom: 1px dashed var(--line); position: relative; } .insights .ins:last-child { border-bottom: 0; }
+  .insights .ins::before { content: ""; position: absolute; left: 0; top: 14px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+  .insights .ins.warn::before { background: #DC2626; } .insights .ins.save::before { background: #16A34A; } .insights .ins.meal::before { background: #0D9488; } .insights .ins.bus::before, .insights .ins.hq::before { background: #7C3AED; }
+  .insights .ins b { font-size: 14.5px; } .insights .ins span { font-family: var(--ar); direction: rtl; text-align: right; color: var(--slate); font-size: 13.5px; }
+  .cchart { position: relative; margin: 8px 0 12px; } .cchart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .cchart .grid { stroke: #E7ECF3; stroke-width: 1; } .cchart .base { stroke: #94A3B8; stroke-width: 1; } .cchart .ax { font: 600 11px Barlow, Arial, sans-serif; fill: var(--slate); }
+  .cchart .hit { fill: transparent; cursor: default; } .cchart .hit.on { fill: rgba(19,33,58,.05); }
+  .clegend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--slate); font-weight: 600; } .clegend i, .ctip i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .ctip { position: absolute; width: 180px; background: #13213A; color: #fff; border-radius: 10px; padding: 8px 10px; font-size: 12.5px; pointer-events: none; z-index: 5; box-shadow: 0 6px 18px rgba(0,0,0,.2); } .ctip b { display: block; margin-bottom: 3px; }
+  .meter { display: inline-flex; align-items: center; gap: 6px; min-width: 110px; } .meter i { display: block; height: 7px; border-radius: 4px; background: #7C3AED; } .meter::before { content: ""; } .meter { background: linear-gradient(#EEF2F8, #EEF2F8) left center / 70px 7px no-repeat; } .meter i { max-width: 70px; } .meter b { margin-left: auto; font-size: 13px; }
+  .meter.hot i { background: #DC2626; }
+  .autohint { margin: 0 0 10px; padding: 9px 12px; background: #FFF7E6; border-radius: 12px; color: #8A5300; font-size: 13.5px; }
   .bigmap { height: 520px; border-radius: 14px; margin-top: 10px; overflow: hidden; background: #EEF2F8; }
   .upin span { display: inline-block; transform: translate(-50%, -100%); color: #fff; font: 700 12px/1 Barlow, Arial, sans-serif; padding: 5px 7px; border-radius: 8px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
   .upin { background: none; border: 0; }
@@ -1049,6 +1063,8 @@
     const canTr = meals.days.some(d => d.mainEn || d.altEn); let showEn = recall('hub_tr') ? recall('hub_tr') === '1' : LANG === 'English';
     if (canTr) { const tb = el('button', 'trbtn' + (showEn ? ' on' : ''), showEn ? '🌐 Hide English menu · إخفاء الترجمة' : '🌐 Translate the menu to English · ترجمة القائمة'); tb.type = 'button';
       tb.onclick = () => { store('hub_tr', showEn ? '0' : '1'); drawMeals(); }; box.appendChild(tb); }
+    if (meals.autoMeal) box.appendChild(el('div', 'hint autohint', 'Not chosen by the cut-off? You get: ' + meals.autoMeal.replace(' - ', ' · ') + ' · من لا يختار قبل الإغلاق تُسجَّل له هذه الوجبة تلقائيًا'));
+    if (meals.visitor) box.appendChild(el('div', 'hint autohint', 'Choose only the days you come to the site. · اختر الأيام التي تحضر فيها إلى الموقع فقط'));
     meals.days.forEach(d => {
       const card = el('div', 'day' + (d.locked ? ' shut' : ''));
       const h = el('div', 'dayh'); const t = el('div'); t.appendChild(el('b', '', d.label));
@@ -1056,8 +1072,9 @@
       h.appendChild(el('span', 'chip ' + (d.locked ? 'shut' : 'open'), d.locked ? 'Closed' : 'Open'));
       card.appendChild(h);
       if (d.off) card.appendChild(el('div', 'offnote', 'Saturday off for Group ' + meals.group + ' — set as day off. Working this Saturday? Choose a meal. · السبت إجازة لمجموعتك — إذا كنت في العمل اختر وجبتك'));
+      if (d.auto) card.appendChild(el('div', 'offnote', 'Not chosen in time — you got the automatic meal: ' + (d.choiceLabel || '').replace(' - ', ' · ')));
       const opts = el('div', 'opts');
-      meals.choices.forEach(c => {
+      (d.choice && !meals.choices.some(c => c.key === d.choice) ? meals.choices.concat([{ key: d.choice, label: d.choiceLabel }]) : meals.choices).forEach(c => {
         if (c.key === 'ALT' && !d.alt) return;
         const [en, a] = split(c.label);
         const o = el('label', 'opt' + (c.key === 'MAIN' || c.key === 'ALT' ? ' big' : ''));
@@ -1761,7 +1778,7 @@
   function plannerCard() {
     const c = el('div', 'card'); c.appendChild(el('div', 'ttl', '👤 Plan a person’s meals · تحديد وجبات موظف'));
     c.appendChild(el('div', 'meta', 'For people who do not use the app (e.g. managers), or to correct a choice — allowed even after the cut-off.'));
-    const people = () => (CF && CF.users || []).filter(u => u.Meals === 'Yes' && String(u.Active).toLowerCase() !== 'no');
+    const people = () => (CF && CF.users || []).filter(u => /^(yes|visit)/i.test(u.Meals || '') && String(u.Active).toLowerCase() !== 'no');
     const q = mkIn('', 'search', 'Search name or code…'), list = el('div', 'plist'), week = el('div', 'pweek');
     c.appendChild(q); c.appendChild(list); c.appendChild(week);
     const showList = () => { list.innerHTML = ''; const t = q.value.trim().toLowerCase(); if (!t) return;
@@ -2032,13 +2049,14 @@
   const USER_FORM = [
     ['Basic', [['Name', 'text'], ['Name (Arabic)', 'text'], ['Department', 'dept'], ['Title', 'text'], ['Location', 'text'], ['Company', 'text'], ['Role', 'role'], ['Active', 'yn']]],
     ['Sign-in', [['Mobile', 'tel'], ['Password', 'text'], ['Email', 'email'], ['Control Room', 'yn']]],
-    ['Services', [['Meals', 'yn'], ['Default Meal', 'meal'], ['Meal Options', 'mopt'], ['Sat-Off Group', 'grp'], ['Supplies', 'yn'], ['Transport', 'yn'], ['Unit', 'unit'], ['Bus', 'bus'], ['Bus Pickup', 'text']]],
+    ['Services', [['Meals', 'ynv'], ['Default Meal', 'meal'], ['Meal Options', 'mopt'], ['Sat-Off Group', 'grp'], ['Supplies', 'yn'], ['Transport', 'yn'], ['Unit', 'unit'], ['Bus', 'bus'], ['Bus Pickup', 'text']]],
     ['Other', [['Notes', 'text']]]
   ];
   const HELP = { Password: 'Empty = the staff code. Employees can change it themselves; you always see it here.', 'Default Meal': 'Counted automatically every day unless the person chooses another meal.',
-    'Meal Options': 'Sandwich = this person can also choose the sandwich meal.', 'Sat-Off Group': 'A or B — Saturday off by rotation.', 'Bus Pickup': 'Optional pickup point (e.g. Cairo – Ring Road). Empty = his unit.' };
+    'Meal Options': 'Sandwich = this person can also choose the sandwich meal.', Meals: 'Visits only = never counted as “not chosen” and never gets the automatic meal.', 'Sat-Off Group': 'A or B — Saturday off by rotation.', 'Bus Pickup': 'Optional pickup point (e.g. Cairo – Ring Road). Empty = his unit.' };
   function userInput(type, v) {
     if (type === 'yn') return yn(v);
+    if (type === 'ynv') return mkSel([['Yes', 'Yes — every day'], ['Visits only', 'Visits only (HQ) — orders on the days he comes'], ['No', 'No']], /^visit/i.test(v || '') ? 'Visits only' : String(v || 'No').toLowerCase() === 'yes' ? 'Yes' : 'No');
     if (type === 'role') return mkSel(CF.lists.roles, v || 'Employee');
     if (type === 'meal') return mkSel(CF.lists.choices.filter(c => c.key !== 'NONE').map(c => c.label.split(' - ')[0]), v, '— none —');
     if (type === 'mopt') return mkSel(['Sandwich'], v, '— standard —');
@@ -2065,7 +2083,7 @@
         const r = el('button', 'prow' + (String(u.Active).toLowerCase() === 'no' ? ' off' : '')); r.type = 'button';
         const a = el('span', 'pn'); a.appendChild(el('b', '', u.Name)); a.appendChild(el('small', '', u.code + ' · ' + (u.Department || '—') + (u.Mobile ? ' · ' + u.Mobile : '')));
         const tags = el('span', 'ptags');
-        [[u['Control Room'] === 'Yes', 'Admin'], [u.Meals === 'Yes', '🍽️'], [!!u.Bus, '🚌 ' + u.Bus], [!!u.Unit, '🏠 ' + u.Unit], [u.Role === 'Driver', 'Driver'], [String(u.Active).toLowerCase() === 'no', 'Inactive']]
+        [[u['Control Room'] === 'Yes', 'Admin'], [u.Meals === 'Yes', '🍽️'], [/^visit/i.test(u.Meals || ''), '🍽️ visits'], [!!u.Bus, '🚌 ' + u.Bus], [!!u.Unit, '🏠 ' + u.Unit], [u.Role === 'Driver', 'Driver'], [String(u.Active).toLowerCase() === 'no', 'Inactive']]
           .forEach(([on, t2]) => { if (on) tags.appendChild(el('i', '', t2)); });
         r.appendChild(a); r.appendChild(tags); r.onclick = () => { pEdit = { code: u.code }; drawPane(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
         list.appendChild(r);
@@ -2136,7 +2154,7 @@
       const c = el('button', 'card bcard'); c.type = 'button';
       const t = el('div', 'top'); const l = el('div'); l.appendChild(el('div', 'ttl', '🚌 ' + b.Bus + (String(b.Active).toLowerCase() === 'no' ? ' · inactive' : '')));
       l.appendChild(el('div', 'meta', (b['Route / Area'] || '') + ' · ' + (b['Runs on'] || '—') + ' · to site ' + t12(b['To site at']) + ' · return ' + t12(b['Return at']) +
-        ' · ' + (b.Seats || '?') + ' seats' + (b['Open to all on'] ? ' · open to all on ' + b['Open to all on'] : '') + (b['Ride with (bus)'] ? ' · rides with ' + b['Ride with (bus)'] + ' on ' + (b['On these days'] || '—') : '')));
+        ' · ' + (b.Seats || '?') + ' seats' + (b['Open to all on'] ? ' · open to all on ' + b['Open to all on'] : '') + (String(b['Open to HQ']).toLowerCase() === 'yes' ? ' · open to HQ' : '') + (b['Ride with (bus)'] ? ' · rides with ' + b['Ride with (bus)'] + ' on ' + (b['On these days'] || '—') : '')));
       const riders = CF.users.filter(u => u.Bus === b.Bus).length;
       t.appendChild(l); t.appendChild(pill(riders + ' people', 'green')); c.appendChild(t);
       c.onclick = () => { bEdit = { key: b.Bus }; drawPane(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
@@ -2154,13 +2172,14 @@
     add('Runs on', daysPick(b['Runs on'] || 'Sat, Sun, Mon, Tue, Wed, Thu'));
     add('To site at', mkIn(b['To site at'] || '06:30', 'time'));
     add('Return at', mkIn(b['Return at'] || '17:00', 'time'));
-    const seats = mkIn(b.Seats || 11, 'number'); seats.min = 1; seats.max = 60; add('Seats', seats);
+    const seats = mkIn(b.Seats || 13, 'number'); seats.min = 1; seats.max = 60; add('Seats', seats);
     add('Driver', mkIn(b.Driver, 'text'));
     add('Driver mobile', mkIn(b['Driver mobile'], 'tel'));
     add('Plate', mkIn(b.Plate, 'text'));
     add('Ride with (bus)', mkSel(CF.buses.filter(x => x.Bus !== b.Bus).map(x => x.Bus), b['Ride with (bus)'], '— runs on its own —'), 'On the days below, this bus’s riders ride with that bus (e.g. one bus on Saturday).');
     add('On these days', daysPick(b['On these days'] || ''));
     add('Open to all on', daysPick(b['Open to all on'] || ''), 'On these days any employee can also book this bus (e.g. Thursday back to Cairo).');
+    add('Open to HQ', yn(b['Open to HQ'] || 'No'), 'Yes = HQ staff (Location = HQ) can book this bus on every day it runs — for their site visits.');
     add('Active', yn(b.Active || 'Yes'));
     add('Notes', mkIn(b.Notes, 'text'));
     c.appendChild(g);
@@ -2322,44 +2341,113 @@
   }
   function drawReport(box, r) {
     box.innerHTML = '';
+    const P = r.prev || null, sum = (a, f) => a.reduce((x, y) => x + f(y), 0), pct = (a, b) => b ? Math.round(a / b * 100) : 0, fmtN = n => Number(n || 0).toLocaleString('en');
     const h = el('div', 'rhead'); const lg = document.querySelector('.bar-top img'); if (lg) { const im = el('img', 'rlogo'); im.src = lg.src; im.alt = 'SAFfly'; h.appendChild(im); }
-    const ht = el('div'); ht.appendChild(el('div', 'rkick', 'Administration & HR · الإدارة والموارد البشرية')); ht.appendChild(el('h3', '', 'Activity report — ' + r.title));
-    ht.appendChild(el('div', 'meta', (document.getElementById('bName').textContent || 'SAFfly ONE') + ' · prepared by ' + me.name + ' · ' + r.generated)); h.appendChild(ht); box.appendChild(h);
-    const k = el('div', 'kpis');
-    const tile = (t, n, s, c) => { const b = el('div', 'kpi'); b.style.setProperty('--c', c); b.appendChild(el('span', 't', t)); b.appendChild(el('span', 'n', String(n))); b.appendChild(el('span', 's', s)); k.appendChild(b); };
-    tile('Meals', r.meals.total + r.meals.guests, r.meals.guests + ' guest meals', '#0F766E');
-    tile('Bus rides', r.bus.rides, r.bus.byBus.length + ' buses', '#6D28D9');
-    tile('Supply items', r.supplies.items.reduce((a, x) => a + x.qty, 0), r.supplies.items.length + ' different items', '#2456AD');
-    tile('Housing requests', r.housing.total, r.housing.completed + ' completed · avg ' + r.housing.avgHours + ' h', '#B45309');
-    tile('Transport', r.transport.total, r.transport.approved + ' approved', '#7C3AED');
-    tile('Fuel', r.fuel.reduce((a, x) => a + x.egp, 0).toLocaleString('en') + ' EGP', r.fuel.reduce((a, x) => a + x.fills, 0) + ' fills', '#475569');
+    const ht = el('div'); ht.appendChild(el('div', 'rkick', 'Administration & HR dashboard · لوحة الإدارة والموارد البشرية')); ht.appendChild(el('h3', '', r.title));
+    ht.appendChild(el('div', 'meta', (document.getElementById('bName').textContent || 'SAFfly ONE') + ' · prepared by ' + me.name + ' · ' + r.generated + (P ? ' · compared with ' + P.title : ''))); h.appendChild(ht); box.appendChild(h);
+    // ---- KPI tiles with change vs the previous period
+    const k = el('div', 'kpis dk');
+    const tile = (t, n, s, c, cur, prev, upGood) => { const b = el('div', 'kpi'); b.style.setProperty('--c', c); b.appendChild(el('span', 't', t)); b.appendChild(el('span', 'n', String(n)));
+      const sub = el('span', 's', s); if (P && prev != null && cur != null) { const d = prev ? Math.round((cur - prev) / prev * 100) : (cur ? null : 0);
+        const ch = el('span', 'dlt ' + (d == null || d === 0 ? 'flat' : ((d > 0) === upGood ? 'good' : 'bad')), d == null ? 'new' : (d > 0 ? '▲ ' : d < 0 ? '▼ ' : '= ') + Math.abs(d) + '%'); ch.title = 'Previous: ' + fmtN(prev); sub.prepend(ch); }
+      b.appendChild(sub); k.appendChild(b); };
+    const M = r.meals, Bs = r.bus, mealsAll = M.total + M.guests, supQty = sum(r.supplies.items, x => x.qty), fuelEgp = Math.round(sum(r.fuel, x => x.egp) * 100) / 100;
+    tile('Meals', fmtN(mealsAll), M.guests + ' guests · ' + M.hq + ' HQ', '#0D9488', mealsAll, P && P.meals, true);
+    tile('Automatic meals', fmtN(M.auto), pct(M.auto, M.total) + '% did not choose', '#D97706', M.auto, P && P.auto, false);
+    tile('Bus seats booked', fmtN(Bs.rides), Bs.riders + ' people · ' + Bs.hqRiders + ' HQ', '#7C3AED', Bs.rides, P && P.rides, true);
+    tile('Supply items', fmtN(supQty), r.supplies.items.length + ' different items', '#2456AD', supQty, P && P.supplies, false);
+    tile('Housing requests', r.housing.total, r.housing.completed + ' done · avg ' + r.housing.avgHours + ' h', '#B45309', r.housing.total, P && P.housing, false);
+    tile('Fuel', fmtN(fuelEgp) + ' EGP', sum(r.fuel, x => x.fills) + ' fills', '#475569', fuelEgp, P && P.fuel, false);
+    if (M.cost) tile('Meal cost (est.)', fmtN(M.cost.total) + ' EGP', M.cost.perMeal + ' EGP per meal', '#0F766E', M.cost.total, P && P.cost, false);
     box.appendChild(k);
-    const sec = (title, node) => { const c = el('div', 'card rsec'); c.appendChild(el('div', 'ttl', title)); c.appendChild(node); box.appendChild(c); };
+    // ---- what the numbers say (facts only, from the data above)
+    const ins = [];
+    if (M.total) ins.push(['meal', pct(M.chosen, M.total) + '% of staff meals were chosen by the people themselves; ' + M.auto + ' were automatic' + (M.autoMeal === 'LIGHT' ? ' (light sandwich).' : '.'),
+      pct(M.chosen, M.total) + '% من الوجبات اختارها الموظفون بأنفسهم، و' + M.auto + ' وجبة تلقائية' + (M.autoMeal === 'LIGHT' ? ' (سندوتش خفيف).' : '.')]);
+    if (M.cost && M.cost.saved) ins.push(['save', 'Giving a light sandwich instead of the main meal to people who did not choose saved about ' + fmtN(M.cost.saved) + ' EGP.', 'السندوتش الخفيف بدل الوجبة الأساسية لمن لم يختر وفّر حوالي ' + fmtN(M.cost.saved) + ' جنيه.']);
+    if (M.cost && M.cost.missing.length) ins.push(['warn', 'Cost is partial — no price for: ' + M.cost.missing.join(', ') + ' (Settings → Meal prices).', 'التكلفة غير كاملة — لا يوجد سعر لبعض الأنواع (الإعدادات ← Meal prices).']);
+    const topDay = M.days.slice().sort((a, b) => b.n - a.n)[0]; if (topDay) ins.push(['cal', 'Busiest kitchen day: ' + topDay.date + ' with ' + topDay.n + ' meals.', 'أكثر يوم في المطبخ: ' + topDay.date + ' بعدد ' + topDay.n + ' وجبة.']);
+    const tripsSeats = sum(Bs.byBus, b => b.days * 2 * (b.seats || 0)), useAll = tripsSeats ? Math.round(Bs.rides / tripsSeats * 100) : null;
+    if (Bs.rides) ins.push(['bus', Bs.riders + ' people booked ' + Bs.rides + ' seats' + (useAll != null ? '; buses ran ' + useAll + '% full on average.' : '.'), Bs.riders + ' موظف حجزوا ' + Bs.rides + ' مقعد' + (useAll != null ? '، ومتوسط إشغال الباصات ' + useAll + '%.' : '.')]);
+    const topWd = Bs.weekdays.slice().sort((a, b) => b.n - a.n)[0]; if (topWd && topWd.n) ins.push(['cal', 'Busiest bus day of the week: ' + topWd.day + ' (' + topWd.n + ' seats).', 'أكثر أيام الأسبوع ركوبًا: ' + topWd.ar + ' (' + topWd.n + ' مقعد).']);
+    const full = Bs.byBus.filter(b => b.util != null && b.util >= 90); if (full.length) ins.push(['warn', 'Near full: ' + full.map(b => b.bus + ' ' + b.util + '%').join(', ') + '.', 'باصات قريبة من الامتلاء: ' + full.map(b => b.bus).join('، ') + '.']);
+    if (Bs.hqRiders || M.hq) ins.push(['hq', 'HQ visits: ' + Bs.hqRiders + ' HQ staff came by bus (' + Bs.hqRides + ' seats) · ' + M.hq + ' HQ meals.', 'زيارات الإدارة العامة: ' + Bs.hqRiders + ' موظف جاءوا بالباص (' + Bs.hqRides + ' مقعد) · ' + M.hq + ' وجبة.']);
+    if (r.housing.open) ins.push(['warn', r.housing.open + ' housing request(s) from this period are still open.', r.housing.open + ' طلب سكن من هذه الفترة ما زال مفتوحًا.']);
+    if (P && P.meals) { const d = Math.round((mealsAll - P.meals) / P.meals * 100); if (d) ins.push(['trend', 'Meals ' + (d > 0 ? 'up ' : 'down ') + Math.abs(d) + '% vs ' + P.title + '.', 'الوجبات ' + (d > 0 ? 'زادت ' : 'قلّت ') + Math.abs(d) + '% عن ' + P.title + '.']); }
+    if (ins.length) { const c = el('div', 'card rsec insights'); c.appendChild(el('div', 'ttl', 'What the numbers say · قراءة سريعة'));
+      ins.forEach(([kind, en, a]) => { const d = el('div', 'ins ' + kind); d.appendChild(el('b', '', en)); d.appendChild(el('span', '', a)); c.appendChild(d); }); box.appendChild(c); }
+    const sec = (title, node, sub) => { const c = el('div', 'card rsec'); c.appendChild(el('div', 'ttl', title)); if (sub) c.appendChild(el('div', 'meta', sub)); c.appendChild(node); box.appendChild(c); return c; };
     const table = (heads, rows) => { const t = el('table', 'rtab'); const tr = el('tr'); heads.forEach(x => tr.appendChild(el('th', '', x))); t.appendChild(tr);
       if (!rows.length) { const e = el('tr'); const td = el('td', '', 'No data'); td.colSpan = heads.length; e.appendChild(td); t.appendChild(e); }
-      rows.forEach(rr => { const e = el('tr'); rr.forEach(x => e.appendChild(el('td', '', x == null ? '' : String(x)))); t.appendChild(e); }); return t; };
-    const colors = { MAIN: '#0F766E', ALT: '#14B8A6', INDIAN: '#E8A33D', DIET: '#65A30D', SANDWICH: '#2456AD' };
-    const two = el('div', 'twocol');
-    two.appendChild(bars(r.meals.byType.map(x => [x.label + ' · ' + x.ar, x.n, colors[x.key]]), '#0F766E'));
-    two.appendChild(table(['Day', 'Meals'], r.meals.days.map(d => [d.date, d.n])));
-    sec('🍽️ Meals', two);
-    sec('🚌 Buses', table(['Bus', 'To site', 'Return'], r.bus.byBus.map(b => [b.bus, b.to, b.back])));
+      rows.forEach(rr => { const e = el('tr'); rr.forEach(x => e.appendChild(x instanceof Node ? (() => { const td = el('td'); td.appendChild(x); return td; })() : el('td', '', x == null ? '' : String(x)))); t.appendChild(e); }); return t; };
+    // ---- Meals
+    const MS = [{ name: 'Chosen · اختار', color: '#0D9488', key: 'chosen' }, { name: 'Automatic · تلقائي', color: '#D97706', key: 'auto' }, { name: 'Guests & light · زوار وخفيف', color: '#2563EB', key: 'guests' }];
+    const m1 = el('div'); m1.appendChild(colChart(M.days.map(d => ({ label: d.date, values: MS.map(x => d[x.key]) })), MS, 'meals'));
+    const m2 = el('div', 'twocol'); const colors = { MAIN: '#0F766E', ALT: '#14B8A6', INDIAN: '#E8A33D', DIET: '#65A30D', SANDWICH: '#2456AD', LIGHT: '#64748B' };
+    m2.appendChild(bars(M.byType.filter(x => x.n || x.key !== 'LIGHT').map(x => [x.label + ' · ' + x.ar, x.n, colors[x.key]]), '#0F766E'));
+    m2.appendChild(table(['', 'Meals', 'Share'], [['Chosen by staff', M.chosen, pct(M.chosen, mealsAll) + '%'], ['Automatic (not chosen)', M.auto, pct(M.auto, mealsAll) + '%'], ['Guests & light meals', M.guests, pct(M.guests, mealsAll) + '%'], ['HQ visit meals (in staff)', M.hq, '']]
+      .concat(M.cost ? [['Estimated cost', fmtN(M.cost.total) + ' EGP', M.cost.perMeal + ' / meal']] : [])));
+    m1.appendChild(m2); sec('Meals per day · الوجبات يوميًا', m1, 'Each column is one day. Amber = people who did not choose and got the automatic meal.');
+    // ---- Buses
+    const BS = [{ name: 'To site · ذهاب', color: '#7C3AED', key: 'to' }, { name: 'Return · عودة', color: '#0891B2', key: 'back' }];
+    const b1 = el('div'); b1.appendChild(colChart(Bs.days.map(d => ({ label: d.date, values: BS.map(x => d[x.key]) })), BS, 'seats'));
+    const b2 = el('div', 'twocol');
+    b2.appendChild(table(['Bus', 'Days', 'People', 'To site', 'Return', 'Avg / trip', 'Seat use'], Bs.byBus.map(b => [b.bus, b.days, b.riders, b.to, b.back, b.avg + (b.seats ? ' / ' + b.seats : ''), b.util == null ? '—' : meter(b.util)])));
+    const wk = el('div'); wk.appendChild(el('div', 'meta', 'Seats by weekday · حسب أيام الأسبوع')); wk.appendChild(colChart(Bs.weekdays.map(d => ({ label: d.day, values: [d.n] })), [{ name: 'Seats', color: '#7C3AED' }], 'seats', 200, true)); b2.appendChild(wk);
+    b1.appendChild(b2);
+    if (Bs.hq.length) { b1.appendChild(el('div', 'meta', 'HQ staff who came to the site · موظفو الإدارة العامة الذين حضروا')); b1.appendChild(table(['Name', 'Days'], Bs.hq.map(x => [x.name, x.days]))); }
+    sec('Buses — who rode · الباصات', b1, 'Counted from the bookings: one seat each way. Seat use = average riders per trip ÷ seats.');
+    // ---- the rest
     const s2 = el('div', 'twocol'); s2.appendChild(table(['Item', 'Requested', 'Issued'], r.supplies.items.map(i => [i.item, i.qty, i.issued])));
-    s2.appendChild(bars(r.supplies.byDept.map(d => [d.dept, d.qty]), '#2456AD')); sec('📎 Office supplies (by item · by department)', s2);
+    s2.appendChild(bars(r.supplies.byDept.map(d => [d.dept, d.qty]), '#2456AD')); sec('Office supplies (by item · by department)', s2);
     const h2 = el('div', 'twocol'); h2.appendChild(table(['Type', 'Requests'], r.housing.byType.map(x => [x.type, x.n])));
     h2.appendChild(table(['Total', 'Completed', 'Open', 'Emergencies', 'Avg hours', 'Rating'], [[r.housing.total, r.housing.completed, r.housing.open, r.housing.emergencies, r.housing.avgHours, r.housing.rated ? r.housing.rating + ' / 5 (' + r.housing.rated + ')' : '—']]));
     if ((r.housing.byAssignee || []).length) h2.appendChild(table(['Service by', 'Rated jobs', 'Average'], r.housing.byAssignee.map(x => [x.who, x.n, x.avg + ' / 5'])));
-    sec('🏠 Housing', h2);
-    sec('🚐 Transport requests', table(['Total', 'Approved', 'Rejected'], [[r.transport.total, r.transport.approved, r.transport.rejected]]));
-    sec('⛽ Fuel by vehicle', table(['Plate', 'Fills', 'EGP', 'Liters', 'km', 'EGP / km'], r.fuel.map(f => [f.plate, f.fills, f.egp, f.liters, f.km, f.egpkm])));
-    const sg = el('div', 'rsign'); [['Prepared by', me.name], ['Reviewed by', ''], ['Approved by', '']].forEach(([a, b]) => { const c = el('div'); c.appendChild(el('span', '', a)); c.appendChild(el('b', '', b || '\u00a0')); c.appendChild(el('i', '', 'Signature / Date')); sg.appendChild(c); });
+    sec('Housing', h2);
+    sec('Transport requests', table(['Total', 'Approved', 'Rejected'], [[r.transport.total, r.transport.approved, r.transport.rejected]]));
+    sec('Fuel by vehicle', table(['Plate', 'Fills', 'EGP', 'Liters', 'km', 'EGP / km'], r.fuel.map(f => [f.plate, f.fills, f.egp, f.liters, f.km, f.egpkm])));
+    const sg = el('div', 'rsign'); [['Prepared by', me.name], ['Reviewed by', ''], ['Approved by', '']].forEach(([a, b]) => { const c = el('div'); c.appendChild(el('span', '', a)); c.appendChild(el('b', '', b || ' ')); c.appendChild(el('i', '', 'Signature / Date')); sg.appendChild(c); });
     box.appendChild(sg);
+  }
+  function meter(p) { const m = el('span', 'meter'); const f = el('i'); f.style.width = (Math.min(100, p) * 0.7) + 'px'; if (p >= 90) m.classList.add('hot'); m.appendChild(f); m.appendChild(el('b', '', p + '%')); return m; }
+  /** Stacked column chart in plain SVG — one column per row, hover shows the numbers. */
+  function colChart(rows, series, unit, H, half) {
+    const NS = 'http://www.w3.org/2000/svg', narrow = window.innerWidth < 640, W = narrow ? 400 : half ? 380 : 720; H = H || (narrow ? 230 : 220); const pad = { l: 34, r: 8, t: 10, b: 26 };
+    const wrap = el('div', 'cchart');
+    if (series.length > 1) { const lg = el('div', 'clegend'); series.forEach(sx => { const i = el('span'); const sw = el('i'); sw.style.background = sx.color; i.appendChild(sw); i.appendChild(document.createTextNode(sx.name)); lg.appendChild(i); }); wrap.appendChild(lg); }
+    if (!rows.length || !rows.some(r => r.values.some(v => v))) { wrap.appendChild(el('div', 'empty', 'No data for this period')); return wrap; }
+    const tot = rows.map(r => r.values.reduce((a, b) => a + b, 0)), max = Math.max(1, ...tot);
+    const step = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000].find(x => max / x <= 4) || Math.ceil(max / 4), top = Math.ceil(max / step) * step;
+    const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('role', 'img');
+    const mk = (n, a) => { const e = document.createElementNS(NS, n); Object.keys(a).forEach(k => e.setAttribute(k, a[k])); svg.appendChild(e); return e; };
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b, y = v => pad.t + ih - v / top * ih;
+    for (let v = 0; v <= top; v += step) { mk('line', { x1: pad.l, x2: W - pad.r, y1: y(v), y2: y(v), class: 'grid' }); const t = mk('text', { x: pad.l - 6, y: y(v) + 4, class: 'ax', 'text-anchor': 'end' }); t.textContent = v; }
+    const slot = iw / rows.length, bw = Math.max(4, Math.min(38, slot * 0.62)), every = Math.ceil(rows.length / (W < 500 ? 7 : 16));
+    const tip = el('div', 'ctip'); tip.hidden = true;
+    rows.forEach((r, i) => {
+      const cx = pad.l + slot * i + slot / 2; let base = 0;
+      const segs = r.values.map((v, j) => ({ v, j })).filter(x => x.v > 0);
+      segs.forEach((x, n) => { const y0 = y(base), y1 = y(base + x.v), last = n === segs.length - 1, hgt = Math.max(1, y0 - y1 - (n ? 2 : 0)), rr = last ? Math.min(4, bw / 2, hgt) : 0;
+        const X = cx - bw / 2, Y = y0 - (n ? 2 : 0) - hgt;
+        mk('path', { d: 'M' + X + ',' + (Y + hgt) + 'V' + (Y + rr) + 'Q' + X + ',' + Y + ' ' + (X + rr) + ',' + Y + 'H' + (X + bw - rr) + 'Q' + (X + bw) + ',' + Y + ' ' + (X + bw) + ',' + (Y + rr) + 'V' + (Y + hgt) + 'Z', fill: series[x.j].color });
+        base += x.v; });
+      if (i % every === 0) { const t = mk('text', { x: cx, y: H - 8, class: 'ax', 'text-anchor': 'middle' }); t.textContent = r.label; }
+      const hit = mk('rect', { x: pad.l + slot * i, y: pad.t, width: slot, height: ih, class: 'hit' });
+      hit.addEventListener('mouseenter', () => { tip.innerHTML = ''; tip.appendChild(el('b', '', r.label + ' — ' + tot[i] + ' ' + unit));
+        series.forEach((sx, j) => { if (series.length > 1) { const d = el('div'); const sw = el('i'); sw.style.background = sx.color; d.appendChild(sw); d.appendChild(document.createTextNode(sx.name.split(' · ')[0] + ': ' + r.values[j])); tip.appendChild(d); } });
+        tip.hidden = false; const bb = wrap.getBoundingClientRect(), hb = hit.getBoundingClientRect(); tip.style.left = Math.min(bb.width - 190, Math.max(0, hb.left - bb.left + hb.width / 2 - 90)) + 'px'; tip.style.top = '24px'; hit.classList.add('on'); });
+      hit.addEventListener('mouseleave', () => { tip.hidden = true; hit.classList.remove('on'); });
+    });
+    mk('line', { x1: pad.l, x2: W - pad.r, y1: y(0), y2: y(0), class: 'base' });
+    wrap.appendChild(svg); wrap.appendChild(tip); return wrap;
   }
   function downloadCsv(r) {
     const L = [], q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"', add = (t, heads, rows) => { L.push(q(t)); L.push(heads.map(q).join(',')); rows.forEach(x => L.push(x.map(q).join(','))); L.push(''); };
     add('Meals by type — ' + r.title, ['Type', 'Meals'], r.meals.byType.map(x => [x.label, x.n]));
-    add('Meals by day', ['Day', 'Meals'], r.meals.days.map(d => [d.date, d.n]));
-    add('Buses', ['Bus', 'To site', 'Return'], r.bus.byBus.map(b => [b.bus, b.to, b.back]));
+    add('Meals per day', ['Day', 'Chosen', 'Automatic', 'Guests & light', 'Total'], r.meals.days.map(d => [d.date, d.chosen, d.auto, d.guests, d.n]));
+    add('Buses', ['Bus', 'Days', 'People', 'To site', 'Return', 'Avg per trip', 'Seats', 'Seat use %'], r.bus.byBus.map(b => [b.bus, b.days, b.riders, b.to, b.back, b.avg, b.seats, b.util == null ? '' : b.util]));
+    add('Bus seats per day', ['Day', 'To site', 'Return'], r.bus.days.map(d => [d.date, d.to, d.back]));
+    add('HQ staff who came', ['Name', 'Days'], r.bus.hq.map(x => [x.name, x.days]));
     add('Office supplies', ['Item', 'Requested', 'Issued'], r.supplies.items.map(i => [i.item, i.qty, i.issued]));
     add('Supplies by department', ['Department', 'Qty'], r.supplies.byDept.map(d => [d.dept, d.qty]));
     add('Housing by type', ['Type', 'Requests'], r.housing.byType.map(x => [x.type, x.n]));
