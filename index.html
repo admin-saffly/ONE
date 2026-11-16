@@ -851,7 +851,16 @@
   let housing = null, hPhoto = null, fuel = null, fuelPhotos = {};
 
   /* ---------------- api ---------------- */
+  const IN_GAS = typeof google !== 'undefined' && google.script && google.script.run;
+  const SELF_URL = '__SELF_URL__';
   async function api(action, payload) {
+    if (IN_GAS) {
+      const body = JSON.stringify({ action: action, payload: Object.assign({}, auth || {}, payload || {}) });
+      const txt = await new Promise((ok, no) => google.script.run.withSuccessHandler(ok).withFailureHandler(e => no(new Error('No connection. Check your internet and try again. · تأكد من الإنترنت'))).apiCall(body));
+      let out; try { out = JSON.parse(txt); } catch (e) { throw new Error('The server did not respond. Try again in a minute.'); }
+      if (!out.ok) throw new Error(out.error || 'Something went wrong.');
+      return out.data;
+    }
     if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL.trim())) throw new Error('Setup is not finished: the API link is missing.');
     let res;
     try {
@@ -938,7 +947,7 @@
     p.classList.add('takeoff'); $('login').classList.add('go');
     return new Promise(res => setTimeout(() => { p.classList.add('leave'); setTimeout(res, 420); }, 1250));
   }
-  $('signOut').onclick = () => { if (!dirty() || confirm('You have unsaved changes. Sign out anyway?')) { auth = null; location.reload(); } };
+  $('signOut').onclick = () => { if (!dirty() || confirm('You have unsaved changes. Sign out anyway?')) { auth = null; if (IN_GAS && /^https:/.test(SELF_URL)) window.open(SELF_URL, '_top'); else location.reload(); } };
 
   /* ---------------- home ---------------- */
   function buildHome() {
